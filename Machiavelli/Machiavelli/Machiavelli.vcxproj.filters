@@ -13,5 +13,84 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Server">
+      <UniqueIdentifier>{b84f8095-e2d1-4717-9381-6ef2d1e4739a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server">
+      <UniqueIdentifier>{880fdd13-7dae-4744-856a-1c6a7e981f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entity">
+      <UniqueIdentifier>{76494e36-09f2-4f09-b413-3a1bee1b15ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entity">
+      <UniqueIdentifier>{ee662d9a-c99e-42e4-9b6d-ad6d04e3ece2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entity\Cards">
+      <UniqueIdentifier>{839e0eb7-8385-4865-9672-e88f27a070aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entity\Cards">
+      <UniqueIdentifier>{8782441d-d5f7-4dc5-b3c3-ddc403459986}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket.h">
+      <Filter>Header Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Throw.h">
+      <Filter>Header Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand.h">
+      <Filter>Header Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Sync_queue.h">
+      <Filter>Header Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
+      <Filter>Header Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Deck.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingCard.h">
+      <Filter>Header Files\Entity\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterCard.h">
+      <Filter>Header Files\Entity\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Header Files\Entity\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="CardType.h">
+      <Filter>Header Files\Entity\Cards</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket.cpp">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="Throw.cpp">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingCard.cpp">
+      <Filter>Source Files\Entity\Cards</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterCard.cpp">
+      <Filter>Source Files\Entity\Cards</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
