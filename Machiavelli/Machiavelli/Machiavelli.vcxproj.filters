@@ -39,9 +39,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Socket.h">
       <Filter>Header Files\Server</Filter>
     </ClInclude>
@@ -78,6 +75,12 @@
     <ClInclude Include="Loader.h">
       <Filter>Header Files\Data</Filter>
     </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Header Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -104,9 +107,18 @@
     <ClCompile Include="Loader.cpp">
       <Filter>Source Files\Data</Filter>
     </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Bouwkaarten.csv">
+      <Filter>Source Files\Data</Filter>
+    </None>
+    <None Include="karakterkaarten.csv">
       <Filter>Source Files\Data</Filter>
     </None>
   </ItemGroup>

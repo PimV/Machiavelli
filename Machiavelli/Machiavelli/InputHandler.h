@@ -1,20 +1,16 @@
 #pragma once
 #include <iostream>
 #include <memory>
-
-#include "Deck.h"
-#include "CharacterCard.h"
-#include "BuildingCard.h"
+#include <vector>
 
 class InputHandler
 {
 public:
 	InputHandler();
-	void handleInput(std::string input);
+	bool handleInput(std::string input);
+	std::vector<std::string> splitOnSpace(std::string input);
 	virtual ~InputHandler();
 private:
-	std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> sp;
-	std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> sp2;
-	std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> bc;
-};
+	std::shared_ptr<std::vector<std::string>> previousCommands;
+};	
 

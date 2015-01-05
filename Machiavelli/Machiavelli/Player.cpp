@@ -5,6 +5,7 @@ Player::Player()
 {
 	this->name = "Default";
 	this->age = 18;
+	this->client = nullptr;
 }
 
 Player::Player(std::string name, int age) {
@@ -18,6 +19,14 @@ void Player::setName(std::string name) {
 
 std::string Player::getName() {
 	return this->name;
+}
+
+void Player::setClient(std::shared_ptr<Socket> client) {
+	this->client = client;
+}
+
+std::shared_ptr<Socket> Player::getClient() {
+	return this->client;
 }
 
 void Player::setAge(int age) {

@@ -11,7 +11,7 @@ Loader::Loader()
 {
 }
 
-void Loader::loadBuildingCards(std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> deck) {
+std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> Loader::loadBuildingCards(std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> deck) {
 	std::ifstream  file("Bouwkaarten.csv");
 	
 	std::string line;
@@ -65,10 +65,11 @@ void Loader::loadBuildingCards(std::shared_ptr<Deck<std::shared_ptr<BuildingCard
 		std::shared_ptr<BuildingCard> card = std::make_shared<BuildingCard>(name, cost, color, description);
 		deck->push(card);	
 	}
+	return deck;
 }
 
-void Loader::loadCharacterCards(std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> deck) {
-	std::ifstream  file("Bouwkaarten.csv");
+std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> Loader::loadCharacterCards(std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> deck) {
+	std::ifstream  file("karakterkaarten.csv");
 
 	std::string line;
 
@@ -96,6 +97,7 @@ void Loader::loadCharacterCards(std::shared_ptr<Deck<std::shared_ptr<CharacterCa
 		std::shared_ptr<CharacterCard> card = std::make_shared<CharacterCard>(name, id);
 		deck->push(card);
 	}
+	return deck;
 }
 
 

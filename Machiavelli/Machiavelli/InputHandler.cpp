@@ -1,48 +1,45 @@
 #include "InputHandler.h"
-
-
+#include <string>
+#include <sstream>
+#include "Server.h"
 
 InputHandler::InputHandler()
 {
-	sp = std::make_shared<Deck<std::shared_ptr<CharacterCard>>>();
-	sp2 = std::make_shared<Deck<std::shared_ptr<CharacterCard>>>();
-
-	bc = std::make_shared<Deck<std::shared_ptr<BuildingCard>>>();
-
-	
-
-	std::shared_ptr<CharacterCard> c1 = std::make_shared<CharacterCard>();
-	c1->setId(1);
-	c1->setName("testcard1");
-
-	//std::shared_ptr<CharacterCard> c2 = std::make_shared<CharacterCard>();
-	//c2->setId(2);
-	//c2->setName("testcard2");
-
-	//std::shared_ptr<CharacterCard> c3 = std::make_shared<CharacterCard>();
-	//c3->setId(3);
-	//c3->setName("testcard3");
-
-	
-	sp->push(c1);
-	//sp->push(c2);
-	//sp->push(c3);
-
-	//sp2->push(c1);
-	//sp2->push(c2);
-	//sp2->push(c3);
+	previousCommands = std::make_shared<std::vector<std::string>>();
 }
 
-void InputHandler::handleInput(std::string input) {
-	if (input == "print") {
+bool InputHandler::handleInput(std::string input) {
+	if (input.length() > 0) {
+		
+		std::vector<std::string> params = this->splitOnSpace(input);
 
-	}
-	else if (input == "shuffle") {
-		sp->shuffle();
-	}
-	else if (input == "refill") {
 
+		if (params[0] == "broadcast") {
+			if (params.size() > 1) {
+				Server::Instance().broadcast(params[1]);
+			}
+		}
+		else if (params[0] == "previous_commands") {
+
+		}
+		else if (params[0] == "name") {
+
+		}
+		else if (params[0] == "disconnect") {
+			return false;
+		}
+
+		previousCommands->push_back(input);
 	}
+	return true;
+}
+
+std::vector<std::string> InputHandler::splitOnSpace(std::string input) {
+	std::stringstream ss(input);
+	std::istream_iterator<std::string> begin(ss);
+	std::istream_iterator<std::string> end;
+	std::vector<std::string> params(begin, end);
+	return params;
 }
 
 InputHandler::~InputHandler()
