@@ -6,7 +6,7 @@ class BuildingCard
 {
 public:
 	BuildingCard();
-	BuildingCard(std::string name, int cost, Color color);
+	BuildingCard(std::string name, int cost, Color color, std::string description);
 
 	void setName(std::string name);
 	std::string getName();
@@ -18,10 +18,14 @@ public:
 	Color getColor();
 	std::string getColorString();
 
+	void setDescription(std::string description);
+	std::string getDescription();
+
 	~BuildingCard();
 private:
 	std::string name;
 	int cost;
 	Color color;
+	std::string description;
 };
 

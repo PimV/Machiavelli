@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Entity\Cards">
       <UniqueIdentifier>{8782441d-d5f7-4dc5-b3c3-ddc403459986}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Data">
+      <UniqueIdentifier>{0b7d15be-caf2-4439-9efc-161f0fe211d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Data">
+      <UniqueIdentifier>{982aebd0-ba8c-492c-8821-6907712fb63f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -69,6 +75,9 @@
     <ClInclude Include="CardType.h">
       <Filter>Header Files\Entity\Cards</Filter>
     </ClInclude>
+    <ClInclude Include="Loader.h">
+      <Filter>Header Files\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -92,5 +101,13 @@
     <ClCompile Include="CharacterCard.cpp">
       <Filter>Source Files\Entity\Cards</Filter>
     </ClCompile>
+    <ClCompile Include="Loader.cpp">
+      <Filter>Source Files\Data</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Bouwkaarten.csv">
+      <Filter>Source Files\Data</Filter>
+    </None>
   </ItemGroup>
 </Project>

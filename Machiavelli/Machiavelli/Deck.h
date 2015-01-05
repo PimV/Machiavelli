@@ -1,35 +1,55 @@
-#include <iostream>
+#include <vector>
+#include <algorithm>
 
-template<typename T>
+template<class T>
 class Deck {
 public:
-	Deck(); // default constructor
-	Deck(size_t size, CardType type); // preferred constructor
-	Deck(const Deck& other); // copy constructor
-	Deck(Deck&& other); // move constructor
+	Deck(const std::initializer_list<T>& i) :elem(i) {}
+	Deck() {}
+	//Getters
+	int size() const { return elem.size(); }
+	bool empty() const { return elem.empty(); }
 
-	~Array3D(); // destructor (not virtual because this class is not meant to be subclassed)
+	//Stack operations
+	void push(const T&);
+	T pop();
+	T peek();
 
-	Array3D<T>& operator=(const Array3D& other); // copy assignment
-	Array3D<T>& operator=(Array3D&& other); // move assignment
-
-	// storing & retrieving values
-	void put(const T& val, size_t x, size_t y, size_t z) { p[index(x, y, z)] = val; }
-	T get(size_t x, size_t y, size_t z) const { return p[index(x, y, z)]; }
-
-	// number of elements
-	size_t size() const { return size; }
-
+	//Deck operations
+	void shuffle();
 private:
-	size_t x_size, y_size, z_size;
-	T* p;
-
-	// translation from (x, y, z) to flat index
-	size_t index(size_t x, size_t y, size_t z) const { return y_size * x_size * z + x_size * y + x; }
-
-	// copy initializer, used by copy constructor and copy assignment
-	void init_storage(const Array3D& other);
-
-	// cleanup, used by destructor and copy assignment
-	void cleanup_storage();
+	std::vector<T> elem;
 };
+
+
+template<class T>
+void Deck<T>::push(const T& t) {
+	elem.push_back(t);
+}
+
+template<class T>
+T Deck<T>::pop() {
+	if (empty()) {
+		throw std::out_of_range("underflow");
+	}
+	auto x = elem.back();
+	elem.pop_back();
+	return x;
+}
+
+template<class T>
+T Deck<T>::peek() {
+	if (empty()) {
+		throw std::out_of_range("underflow");
+	}
+	return elem.back();
+}
+
+template<class T>
+void Deck<T>::shuffle() {
+	if (empty()) {
+		throw std::out_of_range("underflow");
+	}
+
+	std::random_shuffle(elem.begin(), elem.end());
+}

@@ -18,6 +18,7 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="Loader.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Socket.h" />
@@ -28,10 +29,14 @@
     <ClCompile Include="BuildingCard.cpp" />
     <ClCompile Include="CharacterCard.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="Throw.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Bouwkaarten.csv" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{421857CB-38BE-4726-A6E1-55F7C469EDB4}</ProjectGuid>
