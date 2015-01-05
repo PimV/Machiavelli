@@ -30,6 +30,7 @@ bool InputHandler::handleInput(std::string input) {
 		}
 
 		previousCommands->push_back(input);
+
 	}
 	return true;
 }

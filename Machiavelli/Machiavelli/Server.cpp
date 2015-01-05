@@ -28,7 +28,8 @@ void Server::run() {
 
 			while ((client = server.accept()) != nullptr) {
 				if (this->game->getPlayerCount() >= 2) {
-					client->write("Sorry, game is full/has started!");
+					client->write("Het spijt ons, maar het spel is al begonnen of heeft al genoeg spelers! \r\n");
+					client->write("Probeer het later nog eens! \r\n");
 					break;
 				}
 				//Create new socket
@@ -69,6 +70,10 @@ void Server::handle_client(Socket* socket, std::shared_ptr<InputHandler> ih)
 			// read first line of request
 			string cmd = client->readline();
 
+			if (cmd == "freakinguglywayofsayingyouhaveclosedtheclientbypressingexit") {
+				break;
+			}
+
 			if (ih->handleInput(cmd) == false) {
 				this->game->removePlayer(client);
 				this->socket_count--; 
@@ -76,12 +81,12 @@ void Server::handle_client(Socket* socket, std::shared_ptr<InputHandler> ih)
 			}
 	
 
-			//if (cmd == "quit") {
-			//	this->game->removePlayer(client);
-			//	this->socket_count--;
-			//	client->write("Bye!\n");
-			//	break; // out of game loop, will end this thread and close connection
-			//}
+			if (cmd == "quit") {
+				this->game->removePlayer(client);
+				this->socket_count--;
+				client->write("Bye!\n");
+				break; // out of game loop, will end this thread and close connection
+			}
 
 			ClientCommand command{ cmd, client };
 			queue.put(command);
@@ -89,12 +94,12 @@ void Server::handle_client(Socket* socket, std::shared_ptr<InputHandler> ih)
 		}
 		catch (const exception& ex) {
 			
-			client->write("ERROR: ");
+			/*client->write("ERROR: ");
 			client->write(ex.what());
-			client->write("\n");
+			client->write("\n");*/
 		}
 		catch (...) {
-			client->write("ERROR: something went wrong during handling of your request. Sorry!\n");
+			//client->write("ERROR: something went wrong during handling of your request. Sorry!\n");
 		}
 	}
 }

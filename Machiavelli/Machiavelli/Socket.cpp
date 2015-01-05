@@ -108,10 +108,23 @@ std::string Socket::readline()
 	// read a line: ignore '\r', stop at '\n'
 	std::string line;
 	char c;
+	bool hasInput = false;
 	while (ssize_t n = ::recv(sock, &c, 1, 0)) {
+		std::cout << "IN HERE" << std::endl;
 		throw_if_min1((int)n);
-		if (c == '\n') break;
-		if (c != '\r') line += c;
+
+		if (c == '\n') {
+			break;
+		}
+		if (c != '\r') {
+			line += c;
+		}
+		if (hasInput == false) {
+			hasInput = true;
+		}
+	}
+	if (line.length() == 0 && hasInput == false) {
+		line = "freakinguglywayofsayingyouhaveclosedtheclientbypressingexit";
 	}
 	return line;
 }
