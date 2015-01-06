@@ -11,6 +11,10 @@ public:
 	int size() const { return elem.size(); }
 	bool empty() const { return elem.empty(); }
 
+	//Vector operations
+	T get(size_t i);
+	void remove(size_t i);
+
 	//Stack operations
 	void push(const T&);
 	T pop();
@@ -18,10 +22,27 @@ public:
 
 	//Deck operations
 	void shuffle();
+
+	//Print operations
+	void print();
 private:
 	std::vector<T> elem;
 };
 
+template<class T>
+T Deck<T>::get(size_t i) {
+	if (i >= 0 && i < size()) {
+		return elem.at(i);
+	}
+	return nullptr;
+}
+
+template<class T>
+void Deck<T>::remove(size_t i) {
+	if (i >= 0 && i < size()) {
+		elem.erase(elem.begin() + i);
+	}
+}
 
 template<class T>
 void Deck<T>::push(const T& t) {
@@ -53,4 +74,11 @@ void Deck<T>::shuffle() {
 	}
 
 	std::random_shuffle(elem.begin(), elem.end());
+}
+
+template<class T>
+void Deck<T>::print() {
+	for (size_t i = 0; i < elem.size(); i++) {
+		std::cout << elem.at(i)->toString() << std::endl;
+	}
 }

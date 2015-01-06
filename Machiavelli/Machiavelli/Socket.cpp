@@ -110,7 +110,6 @@ std::string Socket::readline()
 	char c;
 	bool hasInput = false;
 	while (ssize_t n = ::recv(sock, &c, 1, 0)) {
-		std::cout << "IN HERE" << std::endl;
 		throw_if_min1((int)n);
 
 		if (c == '\n') {
@@ -141,7 +140,9 @@ void Socket::write(const char *buf, size_t len)
 
 Socket::~Socket()
 {
-	if (sock > 0) close();
+	if (sock > 0)  {
+		close();
+	}
 }
 
 void Socket::close()

@@ -1,5 +1,6 @@
 #pragma once
-#include "Color.h" 
+#include "Colors.h"
+#include "Characters.h"
 
 #include "BuildingCard.h"
 #include "CharacterCard.h"

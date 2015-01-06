@@ -13,7 +13,7 @@ Loader::Loader()
 
 std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> Loader::loadBuildingCards(std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> deck) {
 	std::ifstream  file("Bouwkaarten.csv");
-	
+
 	std::string line;
 
 	while (std::getline(file, line))
@@ -24,7 +24,7 @@ std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> Loader::loadBuildingCards(s
 		std::string name = "NOT SET";
 		int cost = -1;
 		std::string colorString;
-		Color color = Color::NOT_SET;
+		Colors color = Colors::NOT_SET;
 		std::string description = "NOT SET";
 
 		int i = 0;
@@ -40,19 +40,19 @@ std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> Loader::loadBuildingCards(s
 			else if (i == 2) {
 				colorString = cell;
 				if (colorString == "blauw") {
-					color = Color::Blauw;
+					color = Colors::Blauw;
 				}
 				else if (colorString == "lila") {
-					color = Color::Lila;
+					color = Colors::Lila;
 				}
 				else if (colorString == "groen") {
-					color = Color::Groen;
+					color = Colors::Groen;
 				}
 				else if (colorString == "rood") {
-					color = Color::Rood;
+					color = Colors::Rood;
 				}
 				else if (colorString == "geel") {
-					color = Color::Geel;
+					color = Colors::Geel;
 				}
 
 			}
@@ -63,7 +63,7 @@ std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> Loader::loadBuildingCards(s
 			i++;
 		}
 		std::shared_ptr<BuildingCard> card = std::make_shared<BuildingCard>(name, cost, color, description);
-		deck->push(card);	
+		deck->push(card);
 	}
 	return deck;
 }
@@ -80,6 +80,7 @@ std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> Loader::loadCharacterCards
 
 		std::string name = "NOT SET";
 		int id = -1;
+		Characters character = Characters::NOT_SET;
 
 		int i = 0;
 
@@ -90,11 +91,36 @@ std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> Loader::loadCharacterCards
 			}
 			else if (i == 1) {
 				name = cell;
+				if (name == "Moordenaar") {
+					character = Characters::Moordenaar;
+				}
+				else if (name == "Dief") {
+					character = Characters::Dief;
+				}
+				else if (name == "Magiër") {
+					character = Characters::Magier;
+				}
+				else if (name == "Koning") {
+					character = Characters::Koning;
+				}
+				else if (name == "Prediker") {
+					character = Characters::Prediker;
+				}
+				else if (name == "Koopman") {
+					character = Characters::Koopman;
+				}
+				else if (name == "Bouwmeester") {
+					character = Characters::Bouwmeester;
+				}
+				else if (name == "Condottiere") {
+					character = Characters::Condottiere;
+				}
+
 			}
 
 			i++;
 		}
-		std::shared_ptr<CharacterCard> card = std::make_shared<CharacterCard>(name, id);
+		std::shared_ptr<CharacterCard> card = std::make_shared<CharacterCard>(name, id, character);
 		deck->push(card);
 	}
 	return deck;

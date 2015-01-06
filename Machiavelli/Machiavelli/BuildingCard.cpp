@@ -7,14 +7,14 @@ BuildingCard::BuildingCard()
 {
 	this->setName("NOT SET");
 	this->setCost(-1);
-	this->setColor(Color::NOT_SET);
+	this->setColor(Colors::NOT_SET);
 	this->setDescription("NOT SET");
 }
 
 /**
 *	Create initialized card
 **/
-BuildingCard::BuildingCard(std::string name, int cost, Color color, std::string description) {
+BuildingCard::BuildingCard(std::string name, int cost, Colors color, std::string description) {
 	this->setName(name);
 	this->setCost(cost);
 	this->setColor(color);
@@ -52,14 +52,14 @@ int BuildingCard::getCost() {
 /**
 *	Set card color
 **/
-void BuildingCard::setColor(Color color) {
+void BuildingCard::setColor(Colors color) {
 	this->color = color;
 }
 
 /**
 *	Get card color as enum value
 **/
-Color BuildingCard::getColor() {
+Colors BuildingCard::getColor() {
 	return this->color;
 }
 
@@ -82,6 +82,19 @@ void BuildingCard::setDescription(std::string description) {
 **/
 std::string BuildingCard::getDescription() {
 	return this->description;
+}
+
+std::string BuildingCard::toString() {
+	std::string retVal = "Name: ";
+	retVal.append(this->getName());
+	retVal.append(", cost: ");
+	retVal.append(std::to_string(this->getCost()));
+	retVal.append(", color: ");
+	retVal.append(this->getColorString());
+
+	return retVal;
+	
+
 }
 
 /**

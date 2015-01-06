@@ -20,7 +20,7 @@ public:
 	static Server& Instance();
 
 	void run();
-	void handle_client(Socket* socket, std::shared_ptr<InputHandler> ih);
+	void handle_client(Socket* socket);
 	void consume_command();
 	void broadcast(std::string msg);
 
@@ -29,11 +29,15 @@ public:
 	void setGame(std::shared_ptr<Game> game);
 	std::shared_ptr<Game> getGame();
 
+	void setInputHandler(std::shared_ptr<InputHandler> inputHandler);
+	std::shared_ptr<Game> getInputHandler();
+
 	virtual ~Server();
 
 private:
 	std::vector<std::shared_ptr<Socket>> clients;
 	std::shared_ptr<Game> game;
+	std::shared_ptr<InputHandler> inputHandler;
 	int socket_count;
 	const int tcp_port { 1080 };
 	const std::string prompt { "> " };

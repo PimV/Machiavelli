@@ -11,11 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseTurn.h" />
     <ClInclude Include="BuildingCard.h" />
     <ClInclude Include="CardType.h" />
     <ClInclude Include="CharacterCard.h" />
+    <ClInclude Include="Characters.h" />
+    <ClInclude Include="CharacterSelectionTurn.h" />
     <ClInclude Include="ClientCommand.h" />
-    <ClInclude Include="Color.h" />
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputHandler.h" />
@@ -25,10 +28,13 @@
     <ClInclude Include="Socket.h" />
     <ClInclude Include="Sync_queue.h" />
     <ClInclude Include="Throw.h" />
+    <ClInclude Include="Turns.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseTurn.cpp" />
     <ClCompile Include="BuildingCard.cpp" />
     <ClCompile Include="CharacterCard.cpp" />
+    <ClCompile Include="CharacterSelectionTurn.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Loader.cpp" />

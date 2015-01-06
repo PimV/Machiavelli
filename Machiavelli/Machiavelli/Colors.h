@@ -1,5 +1,5 @@
 #pragma once
-enum class Color
+enum class Colors
 {
 	Geel,
 	Blauw,

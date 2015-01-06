@@ -9,17 +9,18 @@ Server& Server::Instance() {
 
 Server::Server()
 {
-	this->socket_count = 0;	
+	this->socket_count = 0;
 }
 
 void Server::run() {
+
 	// start command consumer thread
 	thread consumer(&Server::consume_command, this);
 	consumer.detach(); // detaching is usually ugly, but in this case the right thing to do
 
 	//// create a server socket
 	ServerSocket server(Server::tcp_port);
-	auto ih = make_shared<InputHandler>();
+
 
 	while (true) {
 		try {
@@ -30,16 +31,17 @@ void Server::run() {
 				if (this->game->getPlayerCount() >= 2) {
 					client->write("Het spijt ons, maar het spel is al begonnen of heeft al genoeg spelers! \r\n");
 					client->write("Probeer het later nog eens! \r\n");
+
 					break;
 				}
 				//Create new socket
-				thread handler{ &Server::handle_client, this, client, ih };
+				thread handler{ &Server::handle_client, this, client };
 				handler.detach();
 
 				//Add sockets to socket collection
-				std::shared_ptr<Socket> shared_client_ptr(client);
-				this->clients.push_back(shared_client_ptr);
-				this->game->addPlayer(shared_client_ptr);
+				//std::shared_ptr<Socket> shared_client_ptr(client);
+				//this->clients.push_back(shared_client_ptr);
+				//this->game->addPlayer(shared_client_ptr);
 
 				std::cout << "Server awaiting players... again..." << std::endl;
 
@@ -58,10 +60,17 @@ void Server::setGame(std::shared_ptr<Game> game) {
 	this->game = game;
 }
 
-void Server::handle_client(Socket* socket, std::shared_ptr<InputHandler> ih) 
+void Server::setInputHandler(std::shared_ptr<InputHandler> inputHandler) {
+	this->inputHandler = inputHandler;
+}
+
+void Server::handle_client(Socket* socket)
 {
 	shared_ptr<Socket> client{ socket };
-	
+
+	this->clients.push_back(client);
+	this->game->addPlayer(client);
+
 	client->write("Welkom bij het spel 'Machiavelli', gemaakt door James Hay en Pim Verlangen.\r\n");
 	client->write("U kunt uw naam op ieder willekeurig moment veranderen door 'name <name>' in te vullen.\r\n");
 
@@ -70,21 +79,11 @@ void Server::handle_client(Socket* socket, std::shared_ptr<InputHandler> ih)
 			// read first line of request
 			string cmd = client->readline();
 
-			if (cmd == "freakinguglywayofsayingyouhaveclosedtheclientbypressingexit") {
-				break;
-			}
-
-			if (ih->handleInput(cmd) == false) {
-				this->game->removePlayer(client);
-				this->socket_count--; 
-				break;
-			}
-	
-
-			if (cmd == "quit") {
+			//Last 'if' is a "Failsafe" for client incorrectly closing connection
+			if (cmd == "quit" || cmd == "disconnect" || cmd == "freakinguglywayofsayingyouhaveclosedtheclientbypressingexit") {
+				this->clients.erase(std::remove(this->clients.begin(), this->clients.end(), client), this->clients.end());
 				this->game->removePlayer(client);
 				this->socket_count--;
-				client->write("Bye!\n");
 				break; // out of game loop, will end this thread and close connection
 			}
 
@@ -93,15 +92,16 @@ void Server::handle_client(Socket* socket, std::shared_ptr<InputHandler> ih)
 
 		}
 		catch (const exception& ex) {
-			
-			/*client->write("ERROR: ");
+
+			client->write("ERROR: ");
 			client->write(ex.what());
-			client->write("\n");*/
+			client->write("\n");
 		}
 		catch (...) {
-			//client->write("ERROR: something went wrong during handling of your request. Sorry!\n");
+			client->write("ERROR: something went wrong during handling of your request. Sorry!\n");
 		}
 	}
+	std::cout << client.use_count() << std::endl;
 }
 
 void Server::broadcast(std::string msg) {
@@ -109,7 +109,7 @@ void Server::broadcast(std::string msg) {
 	std::cout << msg << std::endl;
 	for (std::vector<std::shared_ptr<Socket>>::size_type i = 0; i != clients.size(); i++) {
 		clients[i]->write(msg);
-		clients[i]->write("\n");
+		clients[i]->write("\r\n");
 	}
 	std::cout << "Global message sent." << std::endl;
 }
@@ -122,10 +122,9 @@ void Server::consume_command() // runs in its own thread
 		shared_ptr<Socket> client{ command.get_client() };
 		if (client) {
 			try {
-				// TODO handle command here
-				client->write("Hey, you wrote: '");
-				client->write(command.get_cmd());
-				client->write("', but I'm not doing anything with it.\n");
+				std::shared_ptr<Player> playerTalking = this->game->getPlayerByClient(client);
+
+				this->inputHandler->handleInput(command.get_cmd(), playerTalking);
 			}
 			catch (const exception& ex) {
 				client->write("Sorry, ");

@@ -37,6 +37,12 @@
     <Filter Include="Header Files\Data">
       <UniqueIdentifier>{982aebd0-ba8c-492c-8821-6907712fb63f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Turn">
+      <UniqueIdentifier>{9e78078f-743e-47d3-bb38-28b6d113a188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Turn">
+      <UniqueIdentifier>{da840e41-0498-4a0a-9f67-a813a6108a02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Socket.h">
@@ -66,9 +72,6 @@
     <ClInclude Include="CharacterCard.h">
       <Filter>Header Files\Entity\Cards</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Header Files\Entity\Cards</Filter>
-    </ClInclude>
     <ClInclude Include="CardType.h">
       <Filter>Header Files\Entity\Cards</Filter>
     </ClInclude>
@@ -80,6 +83,21 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Characters.h">
+      <Filter>Header Files\Entity\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="Colors.h">
+      <Filter>Header Files\Entity\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterSelectionTurn.h">
+      <Filter>Header Files\Turn</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTurn.h">
+      <Filter>Header Files\Turn</Filter>
+    </ClInclude>
+    <ClInclude Include="Turns.h">
+      <Filter>Header Files\Turn</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +130,12 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterSelectionTurn.cpp">
+      <Filter>Source Files\Turn</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTurn.cpp">
+      <Filter>Source Files\Turn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
