@@ -24,6 +24,8 @@ public:
 	void setKing(bool isKing);
 	bool playerIsKing();
 
+	bool constructBuildingCard(int index);
+
 	void setTurn(bool turn);
 	bool hasTurn();
 
@@ -63,6 +65,7 @@ private:
 	std::shared_ptr<CharacterCard> character2;
 	std::shared_ptr<CharacterCard> activeCharacter;
 
+	std::vector<std::shared_ptr<BuildingCard>> buildings;
 	std::vector<std::shared_ptr<BuildingCard>> buildingCards;
 	std::vector<std::shared_ptr<BuildingCard>> choosableBuildingCards;
 

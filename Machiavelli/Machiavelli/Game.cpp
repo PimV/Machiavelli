@@ -86,7 +86,7 @@ void Game::pickCharacterCard(std::shared_ptr<Player> player, int index) {
 
 	std::shared_ptr<CharacterSelectionTurn> cTurn = std::dynamic_pointer_cast<CharacterSelectionTurn>(turn);
 	if (cTurn->hasPickedCard()) {
-		player->getClient()->write("U heeft al een kaart gepakt deze beurt.");
+		player->getClient()->write("U heeft al een kaart gepakt deze beurt.\r\n");
 		return;
 	}
 
@@ -275,6 +275,10 @@ void Game::selectBuildingCard(std::shared_ptr<Player> player, int index) {
 		player->addBuildingCard(card);
 		player->emptyChoosableBuildingCards();
 		caTurn->selectSingleCardFromDeck();
+
+		//Notify player
+		player->getClient()->write("U heeft de volgende bouwkaart gepakt: \r\n");
+		player->getClient()->write(card->toString() + "\r\n");
 	}
 
 
@@ -353,6 +357,11 @@ int Game::getPlayerCount() {
 
 #pragma region Turn Handling
 void Game::showCharacterDeckOptions(std::shared_ptr<Player> player) {
+	if (!this->correctPlayerTurn(player)) {
+		player->getClient()->write("U bent nog niet aan de beurt. Wacht totdat de andere speler zijn/haar beurt over is.\r\n");
+		return;
+	}
+
 	player->getClient()->write("Mogelijke opties uit de karakterstapel: \r\n");
 	for (size_t i = 0; i < this->characterDeck->size(); i++) {
 		player->getClient()->write("[" + std::to_string(i + 1) + "] " + this->characterDeck->get(i)->getCharacterString() + "\r\n");
@@ -418,6 +427,10 @@ void Game::prepareTurn() {
 		std::cout << "Asking player what to do with this character" << std::endl;
 		this->callCharacterCard();
 	}
+}
+
+std::shared_ptr<BaseTurn> Game::getTurn() {
+	return this->turn;
 }
 
 #pragma endregion

@@ -8,13 +8,25 @@
 InputHandler::InputHandler()
 {
 	previousCommands = std::make_shared<std::map<std::shared_ptr<Player>, std::shared_ptr<std::vector<std::string>>>>();
-	gameCommands.push_back("pak_goud");
-	gameCommands.push_back("pak_kaarten");
-	gameCommands.push_back("selecteer_bouwkaart");
-	gameCommands.push_back("beurt_over");
-	gameCommands.push_back("bekijk_bouwkaarten");
+	//Character selection commands
 	gameCommands.push_back("pak");
 	gameCommands.push_back("dek");
+	gameCommands.push_back("bekijk_alle_karakterkaarten");
+
+	//Building card commands
+	gameCommands.push_back("pak_bouwkaarten");
+	gameCommands.push_back("bekijk_bouwkaarten");
+	gameCommands.push_back("selecteer_bouwkaart");
+	gameCommands.push_back("bouw_bouwkaart");
+
+	//Take gold command
+	gameCommands.push_back("pak_goud");
+
+	//Turn over command
+	gameCommands.push_back("beurt_over");
+
+	//Help command
+	gameCommands.push_back("help");
 }
 
 bool InputHandler::isGameCommand(std::string command) {
@@ -52,23 +64,33 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 		player->getClient()->write("Het spel is nog niet begonnen!\r\n");
 		return;
 	}
+
+	if (!this->game->correctPlayerTurn(player)) {
+		player->getClient()->write("U bent nog niet aan de beurt. Wacht totdat de andere speler zijn/haar beurt over is.\r\n");
+		return;
+	}
+	//Turn specific
 	if (params[0] == "beurt_over") {
 		if (this->game->checkTurnSwitch()) {
 			this->game->switchTurn();
 		}
 		else {
-			player->getClient()->write("U moet minimaal 2 goud óf 2 bouwkaarten pakken per beurt.");
+			player->getClient()->write("U moet minimaal 2 goud óf 2 bouwkaarten pakken per beurt.\r\n");
 		}
 	}
+	//Turn specific
 	else if (params[0] == "pak_goud") {
 		this->game->takeGold(player);
 	}
-	else if (params[0] == "pak_kaarten") {
+	//Turn specific
+	else if (params[0] == "pak_bouwkaarten") {
 		this->game->takeCards(player);
 	}
+	//Not turn specific
 	else if (params[0] == "bekijk_bouwkaarten") {
 		player->printBuildingCards();
 	}
+	//Turn specific
 	else if (params[0] == "selecteer_bouwkaart") {
 		if (params.size() > 1) {
 			int index = stoi(params[1]);
@@ -79,6 +101,24 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 			player->getClient()->write("Incorrect gebruik. Voorbeeld: selecteer_bouwkaart 1\r\n");
 		}
 	}
+	//Turn specific
+	else if (params[0] == "bouw_bouwkaart") {
+		if (this->game->getTurn()->getType() != Turns::CHAR_ACTION) {
+			player->getClient()->write("Deze actie kan nog niet uitgevoerd worden, omdat het spel in een andere fase zit.\r\n");
+			return;
+		}
+		if (params.size() > 1) {
+			int index = stoi(params[1]);
+			index = index - 1; // correct for + 1 visible to user
+			player->constructBuildingCard(index);
+				
+			
+		}
+		else {
+			player->getClient()->write("Incorrect gebruik. Voorbeeld: selecteer_bouwkaart 1\r\n");
+		}
+	}
+	//Turn specific
 	else if (params[0] == "pak") {
 		if (params.size() > 1) {
 			int index = stoi(params[1]);
@@ -89,6 +129,7 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 			player->getClient()->write("Incorrect gebruik. Voorbeeld: pak 1\r\n");
 		}
 	}
+	//Turn specific
 	else if (params[0] == "dek") {
 		if (params.size() > 1) {
 			int index = stoi(params[1]);
@@ -98,6 +139,10 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 		else {
 			player->getClient()->write("Incorrect gebruik. Voorbeeld: dek 1\r\n");
 		}
+	}
+	//Not turn specific
+	else if (params[0] == "bekijk_alle_karakterkaarten") {
+		this->game->showCharacterDeckOptions(player);
 	}
 }
 

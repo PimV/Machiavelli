@@ -8,8 +8,10 @@ Player::Player()
 	this->setKing(false);
 	this->setTurn(false);
 	this->buildingCards = std::vector<std::shared_ptr<BuildingCard>>();
+	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
+	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	this->gold = 0;
+	this->gold = 100;
 
 	this->client = nullptr;
 
@@ -22,8 +24,9 @@ Player::Player(std::string name, int age) {
 	this->setTurn(false);
 	this->buildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
+	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	this->gold = 0;
+	this->gold = 100;
 
 }
 
@@ -86,6 +89,30 @@ void Player::setActiveCharacterCard(std::shared_ptr<CharacterCard> card) {
 		this->activeCharacter = character2;
 	}
 
+}
+
+bool Player::constructBuildingCard(int index) {
+	bool buildingConstructed = false;
+	if (index >= 0 && index < this->buildingCards.size()) {
+		std::shared_ptr<BuildingCard> card = this->buildingCards.at(index);
+
+		if (this->getGold() >= card->getCost()) {
+			this->buildings.push_back(card);
+			this->buildingCards.erase(this->buildingCards.begin() + index);
+			buildingConstructed = true;
+			this->changeGoldBy(-card->getCost());
+			this->getClient()->write("U heeft het gebouw " + card->getName() + " gebouwd voor " + std::to_string(card->getCost()) + " goudstukken.\r\n");
+			this->getClient()->write("U heeft nog " + std::to_string(this->getGold()) + " goudstukken over.\r\n");
+		}
+		else {
+			this->getClient()->write("U heeft " + std::to_string(card->getCost()) + " goudstukken nodig en u heeft er maar " + std::to_string(this->getGold()) + ".\r\n");
+		}
+	}
+	else {
+		this->getClient()->write("Ongeldige index geselecteerd.\r\n");
+	}
+
+	return buildingConstructed;
 }
 
 std::shared_ptr<CharacterCard> Player::getActiveCharacterCard() {
@@ -176,7 +203,7 @@ void Player::printChoosableBuildingCards() {
 	if (this->choosableBuildingCards.size() > 0) {
 		for (std::vector<std::shared_ptr<BuildingCard>>::size_type i = 0; i != this->choosableBuildingCards.size(); i++) {
 			std::shared_ptr<BuildingCard> card = this->choosableBuildingCards.at(i);
-			retVal.append("[" + std::to_string(i+1) + "] - Type: " + card->getName() + ", bouwkosten: " + std::to_string(card->getCost()) + ", kleur: " + card->getColorString() + "\r\n");
+			retVal.append("[" + std::to_string(i + 1) + "] - Type: " + card->getName() + ", bouwkosten: " + std::to_string(card->getCost()) + ", kleur: " + card->getColorString() + "\r\n");
 		}
 	}
 

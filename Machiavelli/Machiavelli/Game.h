@@ -26,6 +26,7 @@ public:
 	void switchTurnTypes();
 	void prepareTurn();
 	bool correctPlayerTurn(std::shared_ptr<Player> player);
+	std::shared_ptr<BaseTurn> getTurn();
 
 	//Action handling
 	/* Character Card Selection */
