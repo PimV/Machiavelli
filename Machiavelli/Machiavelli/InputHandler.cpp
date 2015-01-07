@@ -8,6 +8,11 @@
 InputHandler::InputHandler()
 {
 	previousCommands = std::make_shared<std::map<std::shared_ptr<Player>, std::shared_ptr<std::vector<std::string>>>>();
+	gameCommands.push_back("pak_goud");
+	gameCommands.push_back("pak_kaarten");
+	gameCommands.push_back("selecteer_bouwkaart");
+	gameCommands.push_back("beurt_over");
+	gameCommands.push_back("bekijk_bouwkaarten");
 	gameCommands.push_back("pak");
 	gameCommands.push_back("dek");
 }
@@ -44,19 +49,55 @@ bool InputHandler::handleInput(std::string input, std::shared_ptr<Player> player
 
 void InputHandler::handleGameCommand(std::vector<std::string> params, std::shared_ptr<Player> player) {
 	if (!this->game->isStarted()) {
-		player->getClient()->write("Het spel is nog niet begonnen!");
+		player->getClient()->write("Het spel is nog niet begonnen!\r\n");
 		return;
 	}
-
-	if (params[0] == "pak") {
+	if (params[0] == "beurt_over") {
+		if (this->game->checkTurnSwitch()) {
+			this->game->switchTurn();
+		}
+		else {
+			player->getClient()->write("U moet minimaal 2 goud óf 2 bouwkaarten pakken per beurt.");
+		}
+	}
+	else if (params[0] == "pak_goud") {
+		this->game->takeGold(player);
+	}
+	else if (params[0] == "pak_kaarten") {
+		this->game->takeCards(player);
+	}
+	else if (params[0] == "bekijk_bouwkaarten") {
+		player->printBuildingCards();
+	}
+	else if (params[0] == "selecteer_bouwkaart") {
+		if (params.size() > 1) {
+			int index = stoi(params[1]);
+			index = index - 1; // correct for + 1 visible to user
+			this->game->selectBuildingCard(player, index);
+		}
+		else {
+			player->getClient()->write("Incorrect gebruik. Voorbeeld: selecteer_bouwkaart 1\r\n");
+		}
+	}
+	else if (params[0] == "pak") {
 		if (params.size() > 1) {
 			int index = stoi(params[1]);
 			index = index - 1; // correct for + 1 visible to user
 			this->game->pickCharacterCard(player, index);
 		}
+		else {
+			player->getClient()->write("Incorrect gebruik. Voorbeeld: pak 1\r\n");
+		}
 	}
 	else if (params[0] == "dek") {
-
+		if (params.size() > 1) {
+			int index = stoi(params[1]);
+			index = index - 1; // correct for + 1 visible to user
+			this->game->coverCharacterCard(player, index);
+		}
+		else {
+			player->getClient()->write("Incorrect gebruik. Voorbeeld: dek 1\r\n");
+		}
 	}
 }
 
@@ -80,7 +121,10 @@ void InputHandler::handleGlobalCommand(std::vector<std::string> params, std::sha
 		}
 	}
 	else if (params[0] == "disconnect") {
-		
+
+	}
+	else {
+		player->getClient()->write("Ongeldig commando ingevoerd.\r\n");
 	}
 }
 

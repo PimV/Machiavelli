@@ -99,6 +99,9 @@
     <ClInclude Include="Turns.h">
       <Filter>Header Files\Turn</Filter>
     </ClInclude>
+    <ClInclude Include="CharacterActionTurn.h">
+      <Filter>Header Files\Turn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -135,6 +138,9 @@
       <Filter>Source Files\Turn</Filter>
     </ClCompile>
     <ClCompile Include="BaseTurn.cpp">
+      <Filter>Source Files\Turn</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterActionTurn.cpp">
       <Filter>Source Files\Turn</Filter>
     </ClCompile>
   </ItemGroup>

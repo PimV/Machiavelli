@@ -19,7 +19,10 @@ public:
 	Characters getCharacter();
 	std::string getCharacterString();
 
+	std::string possibleActions();
+
 	std::string toString();
+
 
 	virtual ~CharacterCard();
 private:

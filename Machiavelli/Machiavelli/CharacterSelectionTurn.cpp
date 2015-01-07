@@ -34,7 +34,6 @@ bool CharacterSelectionTurn::isOver() {
 void CharacterSelectionTurn::resetTurn() {
 	this->coveredCard = false;
 	this->pickedCard = false;
-	this->getPlayer()->getClient()->write("U bent aan de beurt en moet nu één kaart bedekken (dek <kaart_index>) en één kaart pakken (pak <kaart_index>).\r\n");
 }
 
 

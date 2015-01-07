@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "BaseTurn.h"
 #include "CharacterSelectionTurn.h"
+#include "CharacterActionTurn.h"
 #include "InputHandler.h"
 
 class Game 
@@ -16,17 +17,27 @@ public:
 
 	//Start game
 	void startGame();
+	void startRound();
 	bool isStarted();
 
 	//Turn handling
 	bool checkTurnSwitch();
 	void switchTurn();
+	void switchTurnTypes();
+	void prepareTurn();
 	bool correctPlayerTurn(std::shared_ptr<Player> player);
 
 	//Action handling
+	/* Character Card Selection */
 	bool validateCharacterCardInput(int index);
 	void pickCharacterCard(std::shared_ptr<Player> player, int index);
 	void coverCharacterCard(std::shared_ptr<Player> player, int index);
+	
+	/* Character Card Execution */
+	void callCharacterCard();
+	void takeGold(std::shared_ptr<Player> player);
+	void takeCards(std::shared_ptr<Player> player);
+	void selectBuildingCard(std::shared_ptr<Player> player, int index);
 
 	//Player handling
 	std::shared_ptr<Player> addPlayer(std::shared_ptr<Socket> client);
@@ -46,6 +57,8 @@ public:
 
 private:
 	std::unique_ptr<Loader> loader;
+
+	std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> characterOrderDeck;
 	std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> characterDeck;
 	std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> buildingDeck;
 
@@ -55,7 +68,11 @@ private:
 	std::shared_ptr<BaseTurn> turn;
 
 	bool started;
+
+	int turns;
 	int rounds;
+	
+	int currentCharacterCardIndex;
 
 
 };

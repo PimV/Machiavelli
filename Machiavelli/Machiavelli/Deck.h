@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <algorithm>
+#include <random>
+#include <ctime>
 
 template<class T>
 class Deck {
@@ -27,6 +29,7 @@ public:
 	void print();
 private:
 	std::vector<T> elem;
+	
 };
 
 template<class T>
@@ -72,8 +75,11 @@ void Deck<T>::shuffle() {
 	if (empty()) {
 		throw std::out_of_range("underflow");
 	}
-
+	std::srand(unsigned(std::time(0)));
+	
 	std::random_shuffle(elem.begin(), elem.end());
+
+	//std::random_shuffle(elem.begin(), elem.end());
 }
 
 template<class T>

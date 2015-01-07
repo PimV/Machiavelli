@@ -32,7 +32,7 @@ bool BaseTurn::isOver() {
 }
 
 void BaseTurn::resetTurn() {
-	this->done = false;
+
 }
 
 BaseTurn::~BaseTurn()

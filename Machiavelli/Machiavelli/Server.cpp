@@ -68,11 +68,14 @@ void Server::handle_client(Socket* socket)
 {
 	shared_ptr<Socket> client{ socket };
 
+	client->write("Welkom bij het spel 'Machiavelli', gemaakt door James Hay en Pim Verlangen.\r\n");
+	client->write("U kunt uw naam op ieder willekeurig moment veranderen door 'name <name>' in te vullen.\r\n");
+	client->write(Server::prompt);
+
 	this->clients.push_back(client);
 	this->game->addPlayer(client);
 
-	client->write("Welkom bij het spel 'Machiavelli', gemaakt door James Hay en Pim Verlangen.\r\n");
-	client->write("U kunt uw naam op ieder willekeurig moment veranderen door 'name <name>' in te vullen.\r\n");
+
 
 	while (true) { // game loop
 		try {
@@ -105,13 +108,11 @@ void Server::handle_client(Socket* socket)
 }
 
 void Server::broadcast(std::string msg) {
-	std::cout << "Server sending global message: " << std::endl;
-	std::cout << msg << std::endl;
+	std::cout << "<Broadcast>: " << msg << std::endl;
 	for (std::vector<std::shared_ptr<Socket>>::size_type i = 0; i != clients.size(); i++) {
 		clients[i]->write(msg);
 		clients[i]->write("\r\n");
 	}
-	std::cout << "Global message sent." << std::endl;
 }
 
 void Server::consume_command() // runs in its own thread
