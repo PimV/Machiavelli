@@ -11,7 +11,7 @@ Player::Player()
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	this->gold = 100;
+	this->gold = 0;
 
 	this->client = nullptr;
 
@@ -26,7 +26,7 @@ Player::Player(std::string name, int age) {
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	this->gold = 100;
+	this->gold = 0;
 
 }
 
@@ -183,12 +183,16 @@ std::vector<std::shared_ptr<BuildingCard>> Player::getBuildingCards() {
 	return this->buildingCards;
 }
 
+void Player::setBuildingCards(std::vector<std::shared_ptr<BuildingCard>> cards) {
+	this->buildingCards = cards;
+}
+
 void  Player::printBuildingCards() {
 	std::string retVal = "Uw bouwkaarten: \r\n";
 	if (this->buildingCards.size() > 0) {
 		for (std::vector<std::shared_ptr<BuildingCard>>::size_type i = 0; i != this->buildingCards.size(); i++) {
 			std::shared_ptr<BuildingCard> card = this->buildingCards.at(i);
-			retVal.append("[" + std::to_string(i) + "] - Type: " + card->getName() + ", bouwkosten: " + std::to_string(card->getCost()) + ", kleur: " + card->getColorString() + "\r\n");
+			retVal.append("[" + std::to_string(i+1) +  "] - Type: " + card->getName() + ", bouwkosten: " + std::to_string(card->getCost()) + ", kleur: " + card->getColorString() + "\r\n");
 		}
 	}
 	else {

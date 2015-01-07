@@ -15,9 +15,18 @@ public:
 	void setName(std::string name);
 	std::string getName();
 
+	void changeGoldBy(int amount);
+	int getGold();
+
 	void setCharacter(Characters character);
 	Characters getCharacter();
 	std::string getCharacterString();
+
+	void setPickpocketed(bool pickpocketed);
+	bool isPickpocketed();
+
+	void setMurdered(bool murdered);
+	bool isMurdered();
 
 	std::string possibleActions();
 
@@ -29,6 +38,11 @@ private:
 	int id;
 	std::string name;
 	Characters character;
+	
+	int gold;
+
+	bool murdered;
+	bool pickpocketed;
 
 };
 

@@ -23,6 +23,14 @@ bool CharacterActionTurn::isOver() {
 	return false;
 }
 
+void CharacterActionTurn::doSpecial() {
+	this->executedSpecial = true;
+}
+
+bool CharacterActionTurn::didSpecial() {
+	return this->executedSpecial;
+}
+
 void CharacterActionTurn::takeGold() {
 	this->goldTaken = true;
 }
@@ -53,6 +61,10 @@ void CharacterActionTurn::resetTurn() {
 	singleCardTaken = false;
 	executedSpecial = false;
 	finished = false;
+}
+
+std::string CharacterActionTurn::toString() {
+	return this->getPlayer()->getName() + " is aan de beurt met de " + this->getPlayer()->getActiveCharacterCard()->getCharacterString() + ".";
 }
 
 

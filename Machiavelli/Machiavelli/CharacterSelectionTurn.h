@@ -17,6 +17,8 @@ public:
 
 	void resetTurn();
 
+	std::string toString();
+
 	virtual ~CharacterSelectionTurn();
 private:
 	bool coveredCard;

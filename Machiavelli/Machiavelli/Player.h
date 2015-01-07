@@ -47,6 +47,7 @@ public:
 	void addBuildingCard(std::shared_ptr<BuildingCard> card);
 	void removeBuildingCard(std::shared_ptr<BuildingCard> card);
 	std::vector<std::shared_ptr<BuildingCard>> getBuildingCards();
+	void setBuildingCards(std::vector<std::shared_ptr<BuildingCard>> cards);
 	void printBuildingCards();
 
 	void resetForNextRound();

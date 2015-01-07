@@ -27,6 +27,7 @@ public:
 
 	//Print operations
 	void print();
+	std::string toString();
 private:
 	std::vector<T> elem;
 	
@@ -87,4 +88,14 @@ void Deck<T>::print() {
 	for (size_t i = 0; i < elem.size(); i++) {
 		std::cout << elem.at(i)->toString() << std::endl;
 	}
+}
+
+template<class T>
+std::string Deck<T>::toString() {
+	std::string retVal = "";
+	for (size_t i = 0; i < elem.size(); i++) {
+		retVal.append("[" + std::to_string(i+1) + "] " + elem.at(i)->toString() + "\r\n");
+		//std::cout << elem.at(i)->toString() << std::endl;
+	}
+	return retVal;
 }

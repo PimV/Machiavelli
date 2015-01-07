@@ -18,6 +18,7 @@ public:
 	//Start game
 	void startGame();
 	void startRound();
+	std::shared_ptr<CharacterCard> getCurrentCalledCharacter();
 	bool isStarted();
 
 	//Turn handling
@@ -26,6 +27,7 @@ public:
 	void switchTurnTypes();
 	void prepareTurn();
 	bool correctPlayerTurn(std::shared_ptr<Player> player);
+	bool correctCharacterTurn(std::shared_ptr<Player> player, Characters character);
 	std::shared_ptr<BaseTurn> getTurn();
 
 	//Action handling
@@ -39,6 +41,13 @@ public:
 	void takeGold(std::shared_ptr<Player> player);
 	void takeCards(std::shared_ptr<Player> player);
 	void selectBuildingCard(std::shared_ptr<Player> player, int index);
+	void printCharacterOrderCard(std::shared_ptr<Player> player);
+
+	void murderCharacter(std::shared_ptr<Player> player, int index);
+	void pickpocketCharacter(std::shared_ptr<Player> player, int index);
+
+	void swapHands(std::shared_ptr<Player> player);
+	void swapCards(std::shared_ptr<Player> player, std::vector<int> indices);
 
 	//Player handling
 	std::shared_ptr<Player> addPlayer(std::shared_ptr<Socket> client);

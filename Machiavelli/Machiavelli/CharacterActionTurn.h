@@ -25,6 +25,8 @@ public:
 
 	void resetTurn();
 
+	std::string toString();
+
 	virtual ~CharacterActionTurn();
 private:
 	bool goldTaken;

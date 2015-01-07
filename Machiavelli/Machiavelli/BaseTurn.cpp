@@ -31,9 +31,9 @@ bool BaseTurn::isOver() {
 	return true;
 }
 
-void BaseTurn::resetTurn() {
+void BaseTurn::resetTurn() { }
 
-}
+std::string BaseTurn::toString() { return "baseturn"; }
 
 BaseTurn::~BaseTurn()
 {

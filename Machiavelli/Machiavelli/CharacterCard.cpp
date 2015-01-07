@@ -8,6 +8,8 @@ CharacterCard::CharacterCard()
 	this->setName("NOT SET");
 	this->setId(-1);
 	this->setCharacter(Characters::NOT_SET);
+	this->setMurdered(false);
+	this->setPickpocketed(false);
 }
 
 /**
@@ -17,6 +19,8 @@ CharacterCard::CharacterCard(std::string name, int id, Characters character) {
 	this->setName(name);
 	this->setId(id);
 	this->setCharacter(character);
+	this->setMurdered(false);
+	this->setPickpocketed(false);
 }
 
 /**
@@ -68,6 +72,22 @@ int CharacterCard::getId() {
 	return this->id;
 }
 
+void CharacterCard::setPickpocketed(bool pickpocketed) {
+	this->pickpocketed = pickpocketed;
+}
+
+bool CharacterCard::isPickpocketed() {
+	return this->pickpocketed;
+}
+
+void CharacterCard::setMurdered(bool murdered) {
+	this->murdered = murdered;
+}
+
+bool CharacterCard::isMurdered() {
+	return this->murdered;
+}
+
 std::string CharacterCard::possibleActions() {
 	std::string actions = "Mogelijke acties voor de " + this->getCharacterString() + "\r\n";
 	actions.append("\t - beurt_over \r\n");
@@ -77,10 +97,12 @@ std::string CharacterCard::possibleActions() {
 
 	switch (this->getCharacter()) {
 	case Characters::Moordenaar:
-		actions.append("\t - vermoord <karakter_naam> \r\n");
+		actions.append("\t - vermoord <karakter_index> \r\n");
+		actions.append("\t - vermoord_opties \r\n");
 		break;
 	case Characters::Dief:
-		actions.append("\t - besteel <karakter_naam> \r\n");
+		actions.append("\t - besteel_opties \r\n");
+		actions.append("\t - besteel <karakter_index> \r\n");
 		break;
 	case Characters::Magier:
 		actions.append("\t - ruil_hand \r\n");
@@ -109,12 +131,12 @@ std::string CharacterCard::possibleActions() {
 }
 
 std::string CharacterCard::toString() {
-	std::string retVal = "Name: ";
-	retVal.append(this->getCharacterString());
-	retVal.append(", id: ");
-	retVal.append(std::to_string(this->getId()));
-
-	return retVal;
+	//std::string retVal = "";
+	//retVal.append(this->getCharacterString());
+	//retVal.append(", id: ");
+	//retVal.append(std::to_string(this->getId()));
+	return this->getCharacterString();
+	//return retVal;
 }
 
 /**

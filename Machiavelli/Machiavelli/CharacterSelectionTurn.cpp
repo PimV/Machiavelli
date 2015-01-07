@@ -36,6 +36,10 @@ void CharacterSelectionTurn::resetTurn() {
 	this->pickedCard = false;
 }
 
+std::string CharacterSelectionTurn::toString() {
+	return this->getPlayer()->getName() + " is aan de beurt.";
+}
+
 
 CharacterSelectionTurn::~CharacterSelectionTurn()
 {

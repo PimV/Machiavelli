@@ -19,6 +19,8 @@ public:
 
 	virtual void resetTurn();
 
+	virtual std::string toString();
+
 	virtual ~BaseTurn();
 private:
 	Turns type;
