@@ -55,7 +55,7 @@ public:
 	bool constructBuildingCard(int index);
 	bool destroyBuilding(std::shared_ptr<Player> destroyer, int index);
 	int getConstructedBuildingCount();
-	void printBuildings();
+	std::string printBuildings();
 
 	/* Points */
 	bool checkAllColors();

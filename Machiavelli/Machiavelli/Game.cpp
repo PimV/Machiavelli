@@ -355,8 +355,53 @@ void Game::removeBuilding(std::shared_ptr<Player> player, int index) {
 		opponent = player1;
 	}
 
+	if (opponent->hasCharacterCardByCharacter(Characters::Prediker)) {
+		player->getClient()->write("Uw tegenstander heeft een kaart met het karakter Prediker, waardoor u zijn/haar gebouwen deze ronde niet kan vernietigen!\r\n");
+		return;
+	}
+
+	if (opponent->getConstructedBuildingCount() >= 8) {
+		player->getClient()->write("Uw tegenstander heeft al 8 of meer gebouwen. U kunt daarom geen gebouwen vernietigen van uw tegenstander!\r\n");
+		return;
+	}
+
 	bool success = opponent->destroyBuilding(player, index);
-	
+	if (success) {
+		caTurn->doSpecial();
+	}
+}
+
+void Game::printRemoveOptions(std::shared_ptr<Player> player) {
+	std::shared_ptr<CharacterActionTurn> caTurn = std::dynamic_pointer_cast<CharacterActionTurn>(turn);
+	if (caTurn->didSpecial()) {
+		player->getClient()->write("U heeft al uw speciale karaktereigenschap gebruikt deze beurt!\r\n");
+		return;
+	}
+
+	std::shared_ptr<Player> opponent = nullptr;
+	if (player == player1) {
+		opponent = player2;
+	}
+	else if (player == player2) {
+		opponent = player1;
+	}
+
+	player->getClient()->write("De gebouwen van uw tegenstander: \r\n");
+	player->getClient()->write(opponent->printBuildings());
+	 
+}
+
+void Game::printOpponentBuildings(std::shared_ptr<Player> player) {
+	std::shared_ptr<Player> opponent = nullptr;
+	if (player == player1) {
+		opponent = player2;
+	}
+	else if (player == player2) {
+		opponent = player1;
+	}
+
+	player->getClient()->write("De gebouwen van uw tegenstander: \r\n");
+	player->getClient()->write(opponent->printBuildings());
 }
 
 void Game::constructBuilding(std::shared_ptr<Player> player, int index) {
@@ -365,22 +410,25 @@ void Game::constructBuilding(std::shared_ptr<Player> player, int index) {
 		player->getClient()->write("U heeft in deze beurt al het maximaal aantal gebouwen gebouwd (" + std::to_string(caTurn->getMaxBuildings()) + ").\r\n");
 		return;
 	}
-	player->constructBuildingCard(index);
-	caTurn->buildBuilding();
+	bool success = player->constructBuildingCard(index);
+	if (success){
+		caTurn->buildBuilding();
+	}
+
 
 	if (player->getConstructedBuildingCount() >= 8) {
 		if (player == player1) {
 			if (!player2->isFirstToEight()) {
 				player1->setFirstToEight();
 				this->lastRound = true;
-				std::cout << "Player 1 is first to eight buildings" << std::endl;
+				std::cout << "Player 1 is first to eight buildings, last round initiated" << std::endl;
 			}
 		}
 		else if (player == player2) {
 			if (!player1->isFirstToEight()) {
 				player2->setFirstToEight();
 				this->lastRound = true;
-				std::cout << "Player 2 is first to eight buildings" << std::endl;
+				std::cout << "Player 2 is first to eight buildings, last round initiated" << std::endl;
 			}
 		}
 	}

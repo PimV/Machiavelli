@@ -44,7 +44,8 @@ public:
 	void takeCards(std::shared_ptr<Player> player);
 	void constructBuilding(std::shared_ptr<Player> player, int index);
 	void removeBuilding(std::shared_ptr<Player> player, int index);
-	void viewOpponentBuildings(std::shared_ptr<Player>);
+	void printRemoveOptions(std::shared_ptr<Player> player);
+	void printOpponentBuildings(std::shared_ptr<Player> player);
 	void selectBuildingCard(std::shared_ptr<Player> player, int index);
 	void printCharacterOrderCard(std::shared_ptr<Player> player);
 

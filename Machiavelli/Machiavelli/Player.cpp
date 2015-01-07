@@ -123,6 +123,7 @@ bool Player::destroyBuilding(std::shared_ptr<Player> destroyer, int index) {
 			destroyer->getClient()->write("\t - " + building->toString() + "\r\n");
 			destroyer->getClient()->write("Dit kostte u " + std::to_string(building->getDestroyCost()) + " goudstukken.\r\n");
 
+			destroyer->changeGoldBy(-building->getDestroyCost());
 			this->buildings.erase(this->buildings.begin() + index);
 			buildingDestroyed = true;
 		}
@@ -301,8 +302,8 @@ void  Player::printBuildingCards() {
 	this->getClient()->write(retVal);
 }
 
-void Player::printBuildings() {
-	std::string retVal = "Uw gebouwen: \r\n";
+std::string Player::printBuildings() {
+	std::string retVal = "";
 	if (this->buildings.size() > 0) {
 		for (std::vector<std::shared_ptr<BuildingCard>>::size_type i = 0; i != this->buildings.size(); i++) {
 			std::shared_ptr<BuildingCard> card = this->buildings.at(i);
@@ -313,7 +314,7 @@ void Player::printBuildings() {
 		retVal.append(" - Geen \r\n");
 	}
 
-	this->getClient()->write(retVal);
+	return retVal;
 }
 
 void Player::printChoosableBuildingCards() {
