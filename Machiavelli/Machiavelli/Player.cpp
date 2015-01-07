@@ -112,6 +112,12 @@ bool Player::destroyBuilding(std::shared_ptr<Player> destroyer, int index) {
 	bool buildingDestroyed = false;
 	if (index >= 0 && index < this->buildings.size()) {
 		std::shared_ptr<BuildingCard> building = this->buildings.at(index);
+
+		if (building->getName() == "Kerker") {
+			destroyer->getClient()->write("U kunt de Kerker niet vernietigen!\r\n");
+			return buildingDestroyed;
+		}
+
 		if (destroyer->getGold() < building->getDestroyCost()) {
 			destroyer->getClient()->write("Kan dit gebouw niet vernietigen; u heeft te weinig goud!\r\n");
 		}
@@ -159,8 +165,18 @@ bool Player::checkAllColors() {
 	bool hasRed = false;
 	bool hasLila = false;
 
+	bool hasSpecialCard = false;
+
+	int correctColors = 0;
+
 	for (size_t i = 0; i < this->buildings.size(); i++) {
-		switch (this->buildings.at(i)->getColor()) {
+		std::shared_ptr<BuildingCard> building = this->buildings.at(i);
+
+		if (building->getName() == "Hof der Wonderen") {
+			hasSpecialCard = true;
+		}
+
+		switch (building->getColor()) {
 		case Colors::Blauw:
 			hasBlue = true;
 			break;
@@ -177,6 +193,34 @@ bool Player::checkAllColors() {
 			hasRed = true;
 			break;
 		}
+	}
+
+	/* Implement "Hof der Wonderen" card by counting correct colors and adding +1 if needed*/
+	if (hasYellow) {
+		correctColors++;
+	}
+
+	if (hasGreen) {
+		correctColors++;
+	}
+	if (hasBlue) {
+		correctColors++;
+	}
+
+	if (hasRed) {
+		correctColors++;
+	}
+
+	if (hasLila) {
+		correctColors++;
+	}
+
+	if (hasLila && hasSpecialCard) {
+		correctColors++;
+	}
+
+	if (correctColors >= 5) {
+		return true;
 	}
 
 	if (hasGreen && hasBlue && hasRed && hasLila && hasYellow) {
