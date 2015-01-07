@@ -261,7 +261,7 @@ void InputHandler::build(std::vector<std::string> params, std::shared_ptr<Player
 }
 
 void InputHandler::checkBuildings(std::vector<std::string> params, std::shared_ptr<Player> player) {
-	player->printBuildings();
+	//player->printBuildings();
 }
 
 #pragma endregion

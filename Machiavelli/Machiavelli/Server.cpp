@@ -69,7 +69,7 @@ void Server::handle_client(Socket* socket)
 	shared_ptr<Socket> client{ socket };
 
 	client->write("Welkom bij het spel 'Machiavelli', gemaakt door James Hay en Pim Verlangen.\r\n");
-	client->write("U kunt uw naam op ieder willekeurig moment veranderen door 'name <name>' in te vullen.\r\n");
+	client->write("U kunt uw naam op ieder willekeurig moment veranderen door 'naam <name>' in te vullen.\r\n");
 	client->write(Server::prompt);
 
 	this->clients.push_back(client);

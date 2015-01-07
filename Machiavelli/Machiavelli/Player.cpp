@@ -6,7 +6,7 @@ Player::Player()
 	this->setName("Default");
 	this->setAge(18);
 	this->setKing(false);
-	this->setTurn(false);
+	//this->setTurn(false);
 	this->buildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
@@ -21,7 +21,7 @@ Player::Player(std::string name, int age) {
 	this->setName(name);
 	this->setAge(age);
 	this->setKing(false);
-	this->setTurn(false);
+	//this->setTurn(false);
 	this->buildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();

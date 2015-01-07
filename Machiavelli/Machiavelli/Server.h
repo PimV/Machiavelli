@@ -39,7 +39,7 @@ private:
 	std::shared_ptr<Game> game;
 	std::shared_ptr<InputHandler> inputHandler;
 	int socket_count;
-	const int tcp_port { 1080 };
+	const int tcp_port { 25565 };
 	const std::string prompt { "> " };
 
 };
