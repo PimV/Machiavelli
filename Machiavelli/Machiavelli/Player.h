@@ -24,32 +24,37 @@ public:
 	void setKing(bool isKing);
 	bool playerIsKing();
 
-	bool constructBuildingCard(int index);
 
-	void setTurn(bool turn);
-	bool hasTurn();
-
+	/* Character Cards */
 	bool takeCharacterCard(std::shared_ptr<CharacterCard> card);
 	bool hasCharacterChard(std::shared_ptr<CharacterCard> card);
 	bool hasCharacterCardByCharacter(Characters character);
 
+	/* Gold */
 	void changeGoldBy(int amount);
 	int getGold();
 
+	/* Active Character Card after call */
 	void setActiveCharacterCard(std::shared_ptr<CharacterCard> card);
 	std::shared_ptr<CharacterCard> getActiveCharacterCard();
 
-	void addChoosableBuildingCards(std::shared_ptr<BuildingCard> card);
-	std::shared_ptr<BuildingCard> getChoosableBuildingCardByIndex(int index);
-	void emptyChoosableBuildingCards();
-	void printChoosableBuildingCards();
-
+	/* Building Cards */
 	void addBuildingCard(std::shared_ptr<BuildingCard> card);
 	void removeBuildingCard(std::shared_ptr<BuildingCard> card);
 	std::vector<std::shared_ptr<BuildingCard>> getBuildingCards();
 	void setBuildingCards(std::vector<std::shared_ptr<BuildingCard>> cards);
 	void printBuildingCards();
 
+	/* Choosable Building Cards*/
+	void addChoosableBuildingCards(std::shared_ptr<BuildingCard> card);
+	std::shared_ptr<BuildingCard> getChoosableBuildingCardByIndex(int index);
+	void emptyChoosableBuildingCards();
+	void printChoosableBuildingCards();
+
+	/* Buildings */
+	bool constructBuildingCard(int index);
+
+	/* Reset */
 	void resetForNextRound();
 
 

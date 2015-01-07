@@ -8,7 +8,7 @@ Game::Game()
 	rounds = 0;
 	turns = 0;
 
-	this->characterOrderDeck = loader->loadCharacterCards(std::make_shared<Deck<std::shared_ptr<CharacterCard>>>());
+	//this->characterOrderDeck = loader->loadCharacterCards(std::make_shared<Deck<std::shared_ptr<CharacterCard>>>());
 
 	this->started = false;
 }

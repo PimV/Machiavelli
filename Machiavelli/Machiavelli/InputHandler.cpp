@@ -3,6 +3,7 @@
 #include <sstream>
 #include <algorithm>
 #include "Server.h"
+
 #include "Game.h"
 
 InputHandler::InputHandler()
@@ -11,6 +12,7 @@ InputHandler::InputHandler()
 
 	turnIndependentCommands.push_back("bekijk_karakterkaarten");
 	turnIndependentCommands.push_back("bekijk_bouwkaarten");
+	turnIndependentCommands.push_back("bekijk_gebouwen");
 	turnIndependentCommands.push_back("bekijk_goud");
 
 	//Character selection commands
@@ -38,6 +40,7 @@ InputHandler::InputHandler()
 	/* Player Stats */
 	gameCommands.push_back("bekijk_karakterkaarten");
 	gameCommands.push_back("bekijk_bouwkaarten");
+	gameCommands.push_back("bekijk_gebouwen");
 	gameCommands.push_back("bekijk_goud");
 
 	//Take gold command
@@ -98,9 +101,13 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 		else if (params[0] == "bekijk_karakterkaarten") {
 
 		}
+		else if (params[0] == "bekijk_gebouwen") {
+			this->checkBuildings(params, player);
+		}
 		else if (params[0] == "bekijk_goud") {
 			this->checkGold(params, player);
 		}
+
 		return;
 	}
 
@@ -251,6 +258,10 @@ void InputHandler::build(std::vector<std::string> params, std::shared_ptr<Player
 	else {
 		player->getClient()->write("Incorrect gebruik. Voorbeeld: selecteer_bouwkaart 1\r\n");
 	}
+}
+
+void InputHandler::checkBuildings(std::vector<std::string> params, std::shared_ptr<Player> player) {
+	player->printBuildings();
 }
 
 #pragma endregion

@@ -9,17 +9,11 @@ int main(int argc, const char * argv[])
 	std::shared_ptr<InputHandler> inputHandler = std::make_shared<InputHandler>();
 	
 	inputHandler->setGame(game);
-
+	
 	Server::Instance().setInputHandler(inputHandler);
 	Server::Instance().setGame(game);
 	Server::Instance().run();
 	
-
-
-
-
-
-
 	return 0;
 }
 

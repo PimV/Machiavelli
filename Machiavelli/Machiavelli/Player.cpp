@@ -62,13 +62,6 @@ bool Player::playerIsKing() {
 	return this->isKing;
 }
 
-void Player::setTurn(bool turn) {
-	this->turn = turn;
-}
-
-bool Player::hasTurn() {
-	return this->turn;
-}
 
 void Player::changeGoldBy(int amount) {
 	this->gold += amount;

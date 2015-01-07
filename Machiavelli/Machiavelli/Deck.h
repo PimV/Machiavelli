@@ -79,8 +79,6 @@ void Deck<T>::shuffle() {
 	std::srand(unsigned(std::time(0)));
 	
 	std::random_shuffle(elem.begin(), elem.end());
-
-	//std::random_shuffle(elem.begin(), elem.end());
 }
 
 template<class T>

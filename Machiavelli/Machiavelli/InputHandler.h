@@ -33,6 +33,7 @@ public:
 	void selectBuildCard(std::vector<std::string> params, std::shared_ptr<Player> player);
 	void build(std::vector<std::string> params, std::shared_ptr<Player> player);
 	void checkGold(std::vector<std::string> params, std::shared_ptr<Player> player);
+	void checkBuildings(std::vector<std::string> params, std::shared_ptr<Player> player);
 
 	/* Moordenaar */
 	void murder(std::vector<std::string> params, std::shared_ptr<Player> player);
