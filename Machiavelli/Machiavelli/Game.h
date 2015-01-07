@@ -17,6 +17,7 @@ public:
 
 	//Start game
 	void startGame();
+	void endGame();
 	void startRound();
 	std::shared_ptr<CharacterCard> getCurrentCalledCharacter();
 	bool isStarted();
@@ -26,6 +27,7 @@ public:
 	void switchTurn();
 	void switchTurnTypes();
 	void prepareTurn();
+	void applyCardEffects(std::shared_ptr<Player> player);
 	bool correctPlayerTurn(std::shared_ptr<Player> player);
 	bool correctCharacterTurn(std::shared_ptr<Player> player, Characters character);
 	std::shared_ptr<BaseTurn> getTurn();
@@ -40,6 +42,9 @@ public:
 	void callCharacterCard();
 	void takeGold(std::shared_ptr<Player> player);
 	void takeCards(std::shared_ptr<Player> player);
+	void constructBuilding(std::shared_ptr<Player> player, int index);
+	void removeBuilding(std::shared_ptr<Player> player, int index);
+	void viewOpponentBuildings(std::shared_ptr<Player>);
 	void selectBuildingCard(std::shared_ptr<Player> player, int index);
 	void printCharacterOrderCard(std::shared_ptr<Player> player);
 
@@ -78,6 +83,8 @@ private:
 	std::shared_ptr<BaseTurn> turn;
 
 	bool started;
+	bool lastRound;
+	bool gameOver;
 
 	int turns;
 	int rounds;

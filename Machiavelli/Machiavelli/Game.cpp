@@ -8,9 +8,11 @@ Game::Game()
 	rounds = 0;
 	turns = 0;
 
-	//this->characterOrderDeck = loader->loadCharacterCards(std::make_shared<Deck<std::shared_ptr<CharacterCard>>>());
+	this->characterOrderDeck = loader->loadCharacterCards(std::make_shared<Deck<std::shared_ptr<CharacterCard>>>());
 
 	this->started = false;
+	this->lastRound = false;
+	this->gameOver = false;
 }
 
 void Game::startGame() {
@@ -22,11 +24,41 @@ void Game::startGame() {
 	this->buildingDeck->shuffle();
 
 	//Officially start game (input flag)
+	this->gameOver = false;
+	this->lastRound = false;
 	this->startRound();
 	this->started = true;
+
+}
+
+void Game::endGame() {
+	Server::Instance().broadcast("De uitkomst van het spel is: ");
+	Server::Instance().broadcast("Speler 1 (" + player1->getName() + "): " + std::to_string(player1->calculatePoints()));
+	Server::Instance().broadcast("Speler 2 (" + player2->getName() + "): " + std::to_string(player2->calculatePoints()));
+	if (player1->calculatePoints() > player2->calculatePoints()) {
+		Server::Instance().broadcast(player1->getName() + " heeft gewonnen!");
+	}
+	else if (player2->calculatePoints() > player1->calculatePoints()) {
+		Server::Instance().broadcast(player2->getName() + " heeft gewonnen!");
+	}
+	else if (player2->calculatePoints() == player1->calculatePoints()) {
+		if (player1->getBuildingPoints() > player2->getBuildingPoints()) {
+			Server::Instance().broadcast(player1->getName() + " heeft gewonnen doordat hij/zij meer punten had met uitsluitend gebouwen!");
+		}
+		else if (player2->getBuildingPoints() > player1->getBuildingPoints()) {
+			Server::Instance().broadcast(player2->getName() + " heeft gewonnen doordat hij/zij meer punten had met uitsluitend gebouwen!");
+		}
+	}
+	Server::Instance().broadcast("Het spel is nu voorbij. Bedankt voor het spelen!");
+	this->gameOver = true;
 }
 
 void Game::startRound() {
+	if (this->lastRound) {
+		this->endGame();
+		return;
+	}
+
 	Server::Instance().broadcast("Ronde: " + std::to_string(rounds));
 
 	//Load initial decks
@@ -167,6 +199,17 @@ bool Game::validateCharacterCardInput(int index) {
 void Game::callCharacterCard() {
 	for (size_t i = currentCharacterCardIndex; i < this->characterOrderDeck->size(); i++) {
 		std::shared_ptr<CharacterCard> card = this->characterOrderDeck->get(i);
+		std::shared_ptr<Player> player = nullptr;
+		if (player1->hasCharacterChard(card)) {
+			player = player1;
+		}
+		else if (player2->hasCharacterChard(card)) {
+			player = player2;
+		}
+
+		if (player != nullptr) {
+
+		}
 
 		if (player1->hasCharacterChard(card)) {
 			if (card->isMurdered()) {
@@ -184,6 +227,7 @@ void Game::callCharacterCard() {
 			}
 			this->turn->setPlayer(player1);
 			player1->setActiveCharacterCard(card);
+
 			currentCharacterCardIndex = i + 1;
 			break;
 		}
@@ -208,7 +252,32 @@ void Game::callCharacterCard() {
 	}
 	Server::Instance().broadcast(this->turn->getPlayer()->getName() + " is aan de beurt met de " + this->turn->getPlayer()->getActiveCharacterCard()->getCharacterString());
 
+	this->applyCardEffects(this->turn->getPlayer());
 	this->turn->getPlayer()->getClient()->write(this->turn->getPlayer()->getActiveCharacterCard()->possibleActions());
+}
+
+void Game::applyCardEffects(std::shared_ptr<Player> player) {
+	std::shared_ptr<CharacterActionTurn> caTurn = std::dynamic_pointer_cast<CharacterActionTurn>(this->turn);
+	switch (player->getActiveCharacterCard()->getCharacter()) {
+	case Characters::Koning:
+		player->applyKingEffect();
+		break;
+	case Characters::Prediker:
+		player->applyBishopEffect();
+		break;
+	case Characters::Koopman:
+		player->applyMerchantEffect();
+		break;
+	case Characters::Bouwmeester:
+		caTurn->setMaxBuildings(3);
+		for (int i = 0; i < 2; i++) {
+			player->addBuildingCard(this->buildingDeck->pop());
+		}
+		break;
+	case Characters::Condottiere:
+		player->applyWarlordEffect();
+		break;
+	}
 }
 
 void Game::takeGold(std::shared_ptr<Player> player) {
@@ -269,6 +338,52 @@ void Game::takeCards(std::shared_ptr<Player> player) {
 	player->printChoosableBuildingCards();
 
 	caTurn->takeCardsFromDeck();
+}
+
+void Game::removeBuilding(std::shared_ptr<Player> player, int index) {
+	std::shared_ptr<CharacterActionTurn> caTurn = std::dynamic_pointer_cast<CharacterActionTurn>(turn);
+	if (caTurn->didSpecial()) {
+		player->getClient()->write("U heeft al uw speciale karaktereigenschap gebruikt deze beurt!\r\n");
+		return;
+	}
+	
+	std::shared_ptr<Player> opponent = nullptr;
+	if (player == player1) {
+		opponent = player2;
+	}
+	else if (player == player2) {
+		opponent = player1;
+	}
+
+	bool success = opponent->destroyBuilding(player, index);
+	
+}
+
+void Game::constructBuilding(std::shared_ptr<Player> player, int index) {
+	std::shared_ptr<CharacterActionTurn> caTurn = std::dynamic_pointer_cast<CharacterActionTurn>(turn);
+	if (caTurn->buildingsBuilt()) {
+		player->getClient()->write("U heeft in deze beurt al het maximaal aantal gebouwen gebouwd (" + std::to_string(caTurn->getMaxBuildings()) + ").\r\n");
+		return;
+	}
+	player->constructBuildingCard(index);
+	caTurn->buildBuilding();
+
+	if (player->getConstructedBuildingCount() >= 8) {
+		if (player == player1) {
+			if (!player2->isFirstToEight()) {
+				player1->setFirstToEight();
+				this->lastRound = true;
+				std::cout << "Player 1 is first to eight buildings" << std::endl;
+			}
+		}
+		else if (player == player2) {
+			if (!player1->isFirstToEight()) {
+				player2->setFirstToEight();
+				this->lastRound = true;
+				std::cout << "Player 2 is first to eight buildings" << std::endl;
+			}
+		}
+	}
 }
 
 void Game::selectBuildingCard(std::shared_ptr<Player> player, int index) {
@@ -421,7 +536,7 @@ void Game::swapCards(std::shared_ptr<Player> player, std::vector<int> indices) {
 			player->getClient()->write("U heeft " + std::to_string(indices.size() - cardsSwapped) + " kaart(en) niet succesvol om kunnen ruilen, omdat de stapel leeg was.\r\n");
 		}
 		caTurn->doSpecial();
-		
+
 	}
 }
 
@@ -539,6 +654,10 @@ void Game::switchTurn() {
 
 		//Switch turn types
 		this->switchTurnTypes();
+
+		if (this->lastRound) {
+			return;
+		}
 
 		//Reset current turn;
 		this->turn->resetTurn();

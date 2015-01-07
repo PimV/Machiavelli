@@ -6,12 +6,12 @@ Player::Player()
 	this->setName("Default");
 	this->setAge(18);
 	this->setKing(false);
-	//this->setTurn(false);
+	this->firstToEight = false;
 	this->buildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	this->gold = 0;
+	this->gold = 100;
 
 	this->client = nullptr;
 
@@ -21,12 +21,12 @@ Player::Player(std::string name, int age) {
 	this->setName(name);
 	this->setAge(age);
 	this->setKing(false);
-	//this->setTurn(false);
+	this->firstToEight = false;
 	this->buildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	this->gold = 0;
+	this->gold = 100;
 
 }
 
@@ -108,6 +108,112 @@ bool Player::constructBuildingCard(int index) {
 	return buildingConstructed;
 }
 
+bool Player::destroyBuilding(std::shared_ptr<Player> destroyer, int index) {
+	bool buildingDestroyed = false;
+	if (index >= 0 && index < this->buildings.size()) {
+		std::shared_ptr<BuildingCard> building = this->buildings.at(index);
+		if (destroyer->getGold() < building->getDestroyCost()) {
+			destroyer->getClient()->write("Kan dit gebouw niet vernietigen; u heeft te weinig goud!\r\n");
+		}
+		else {
+			this->getClient()->write(destroyer->getName() + " heeft het volgende gebouw van u vernietigd: \r\n");
+			this->getClient()->write("\t - " + building->toString() + "\r\n");
+
+			destroyer->getClient()->write("U heeft het volgende gebouw van " + this->getName() + " succesvol vernietigd: \r\n");
+			destroyer->getClient()->write("\t - " + building->toString() + "\r\n");
+			destroyer->getClient()->write("Dit kostte u " + std::to_string(building->getDestroyCost()) + " goudstukken.\r\n");
+
+			this->buildings.erase(this->buildings.begin() + index);
+			buildingDestroyed = true;
+		}
+		
+	}
+	else {
+		this->getClient()->write("Ongeldige index geselecteerd.\r\n");
+	}
+
+
+	
+	
+
+	return buildingDestroyed;
+}
+
+int Player::getConstructedBuildingCount() {
+	return this->buildings.size();
+}
+
+void Player::setFirstToEight() {
+	this->firstToEight = true;
+}
+
+bool Player::isFirstToEight() {
+	return this->firstToEight;
+}
+
+bool Player::checkAllColors() {
+	bool hasYellow = false;
+	bool hasBlue = false;
+	bool hasGreen = false;
+	bool hasRed = false;
+	bool hasLila = false;
+
+	for (size_t i = 0; i < this->buildings.size(); i++) {
+		switch (this->buildings.at(i)->getColor()) {
+		case Colors::Blauw:
+			hasBlue = true;
+			break;
+		case Colors::Geel:
+			hasYellow = true;
+			break;
+		case Colors::Groen:
+			hasGreen = true;
+			break;
+		case Colors::Lila:
+			hasLila = true;
+			break;
+		case Colors::Rood:
+			hasRed = true;
+			break;
+		}
+	}
+
+	if (hasGreen && hasBlue && hasRed && hasLila && hasYellow) {
+		return true;
+	}
+	return false;
+}
+
+int Player::getBuildingPoints() {
+	
+	int points = 0;
+	for (size_t i = 0; i < this->buildings.size(); i++) {
+		points += this->buildings.at(i)->getCost();
+	}
+	return points;
+}
+
+int Player::calculatePoints() {
+	int points = 0;
+
+	//Building points
+	points += this->getBuildingPoints();
+
+	if (this->checkAllColors()) {
+		points += 3;
+	}
+
+	if (this->isFirstToEight()) {
+		points += 4;
+	}
+
+	if (this->getConstructedBuildingCount() >= 8) {
+		points += 2;
+	}
+
+	return points;
+}
+
 std::shared_ptr<CharacterCard> Player::getActiveCharacterCard() {
 	return this->activeCharacter;
 }
@@ -185,7 +291,22 @@ void  Player::printBuildingCards() {
 	if (this->buildingCards.size() > 0) {
 		for (std::vector<std::shared_ptr<BuildingCard>>::size_type i = 0; i != this->buildingCards.size(); i++) {
 			std::shared_ptr<BuildingCard> card = this->buildingCards.at(i);
-			retVal.append("[" + std::to_string(i+1) +  "] - Type: " + card->getName() + ", bouwkosten: " + std::to_string(card->getCost()) + ", kleur: " + card->getColorString() + "\r\n");
+			retVal.append("[" + std::to_string(i + 1) + "] - Type: " + card->getName() + ", bouwkosten: " + std::to_string(card->getCost()) + ", kleur: " + card->getColorString() + "\r\n");
+		}
+	}
+	else {
+		retVal.append(" - Geen \r\n");
+	}
+
+	this->getClient()->write(retVal);
+}
+
+void Player::printBuildings() {
+	std::string retVal = "Uw gebouwen: \r\n";
+	if (this->buildings.size() > 0) {
+		for (std::vector<std::shared_ptr<BuildingCard>>::size_type i = 0; i != this->buildings.size(); i++) {
+			std::shared_ptr<BuildingCard> card = this->buildings.at(i);
+			retVal.append("[" + std::to_string(i + 1) + "] - Type: " + card->getName() + ", bouwkosten: " + std::to_string(card->getCost()) + ", kleur: " + card->getColorString() + "\r\n");
 		}
 	}
 	else {
@@ -205,6 +326,39 @@ void Player::printChoosableBuildingCards() {
 	}
 
 	this->getClient()->write(retVal);
+}
+
+void Player::applyKingEffect() {
+	for (size_t i = 0; i < this->buildings.size(); i++) {
+		if (this->buildings.at(i)->getColor() == Colors::Geel) {
+			this->gold++;
+		}
+	}
+}
+
+void Player::applyBishopEffect() {
+	for(size_t i = 0; i < this->buildings.size(); i++) {
+		if (this->buildings.at(i)->getColor() == Colors::Blauw) {
+			this->gold++;
+		}
+	}
+}
+
+void Player::applyMerchantEffect() {
+	this->gold++;
+	for (size_t i = 0; i < this->buildings.size(); i++) {
+		if (this->buildings.at(i)->getColor() == Colors::Groen) {
+			this->gold++;
+		}
+	}
+}
+
+void Player::applyWarlordEffect() {
+	for (size_t i = 0; i < this->buildings.size(); i++) {
+		if (this->buildings.at(i)->getColor() == Colors::Rood) {
+			this->gold++;
+		}
+	}
 }
 
 void Player::resetForNextRound() {

@@ -102,7 +102,7 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 
 		}
 		else if (params[0] == "bekijk_gebouwen") {
-			this->checkBuildings(params, player);
+			player->printBuildings();
 		}
 		else if (params[0] == "bekijk_goud") {
 			this->checkGold(params, player);
@@ -150,6 +150,12 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 	}
 	else if (params[0] == "besteel_opties") {
 		this->pickpocketOptions(params, player);
+	}
+	else if (params[0] == "verwijder_gebouw") {
+		this->remove(params, player);
+	}
+	else if (params[0] == "verwijder_opties") {
+
 	}
 	else if (params[0] == "bekijk_alle_karakterkaarten") {
 		this->game->showCharacterDeckOptions(player);
@@ -251,17 +257,11 @@ void InputHandler::build(std::vector<std::string> params, std::shared_ptr<Player
 	if (params.size() > 1) {
 		int index = stoi(params[1]);
 		index = index - 1; // correct for + 1 visible to user
-		player->constructBuildingCard(index);
-
-
+		this->game->constructBuilding(player, index);	
 	}
 	else {
 		player->getClient()->write("Incorrect gebruik. Voorbeeld: selecteer_bouwkaart 1\r\n");
 	}
-}
-
-void InputHandler::checkBuildings(std::vector<std::string> params, std::shared_ptr<Player> player) {
-	//player->printBuildings();
 }
 
 #pragma endregion
@@ -392,6 +392,30 @@ void InputHandler::swapCards(std::vector<std::string> params, std::shared_ptr<Pl
 	}
 	else {
 		player->getClient()->write("U kunt dit commando niet uitvoeren met dit karakter.\r\n");
+	}
+}
+
+#pragma endregion
+
+#pragma region Condottiere
+
+void InputHandler::remove(std::vector<std::string> params, std::shared_ptr<Player> player) {
+	if (this->game->getTurn()->getType() != Turns::CHAR_ACTION) {
+		player->getClient()->write("Deze actie kan nog niet uitgevoerd worden, omdat het spel in een andere fase zit.\r\n");
+		return;
+	}
+	if (this->game->correctCharacterTurn(player, Characters::Condottiere)) {
+		if (params.size() > 1) {
+			int index = stoi(params[1]);
+			index = index - 1; // correct for + 1 visible to user
+			this->game->removeBuilding(player, index);
+		}
+		else {
+			player->getClient()->write("Incorrect gebruik. Voorbeeld: besteel 1\r\n");
+		}
+	}
+	else {
+		player->getClient()->write("U kunt dit commando niet uitvoeren met dit karakter\r\n");
 	}
 }
 

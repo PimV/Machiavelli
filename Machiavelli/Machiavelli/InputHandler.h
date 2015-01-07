@@ -33,7 +33,6 @@ public:
 	void selectBuildCard(std::vector<std::string> params, std::shared_ptr<Player> player);
 	void build(std::vector<std::string> params, std::shared_ptr<Player> player);
 	void checkGold(std::vector<std::string> params, std::shared_ptr<Player> player);
-	void checkBuildings(std::vector<std::string> params, std::shared_ptr<Player> player);
 
 	/* Moordenaar */
 	void murder(std::vector<std::string> params, std::shared_ptr<Player> player);
@@ -46,6 +45,9 @@ public:
 	/* Magiër */
 	void swapHand(std::vector<std::string> params, std::shared_ptr<Player> player);
 	void swapCards(std::vector<std::string> params, std::shared_ptr<Player> player);
+
+	/* Condottiere */
+	void remove(std::vector<std::string> params, std::shared_ptr<Player> player);
 
 	//Random
 	std::vector<std::string> splitOnSpace(std::string input);

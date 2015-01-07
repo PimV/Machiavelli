@@ -49,6 +49,15 @@ int BuildingCard::getCost() {
 	return this->cost;
 }
 
+int BuildingCard::getDestroyCost() {
+	if (this->cost == 1) {
+		return 0;
+	}
+	else {
+		return this->cost - 1;
+	}
+}
+
 /**
 *	Set card color
 **/

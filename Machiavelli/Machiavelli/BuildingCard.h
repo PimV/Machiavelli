@@ -14,6 +14,7 @@ public:
 
 	void setCost(int cost);
 	int getCost();
+	int getDestroyCost();
 
 	void setColor(Colors color);
 	Colors getColor();

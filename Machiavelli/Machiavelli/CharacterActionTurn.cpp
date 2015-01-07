@@ -9,6 +9,9 @@ CharacterActionTurn::CharacterActionTurn()
 	singleCardTaken = false;
 	executedSpecial = false;
 	finished = false;
+
+	maxBuildings = 1;
+	builtBuildings = 0;
 }
 
 bool CharacterActionTurn::isOver() {
@@ -17,6 +20,10 @@ bool CharacterActionTurn::isOver() {
 	}
 
 	if (singleCardTaken) {
+		return true;
+	}
+
+	if (buildingsBuilt()) {
 		return true;
 	}
 
@@ -29,6 +36,25 @@ void CharacterActionTurn::doSpecial() {
 
 bool CharacterActionTurn::didSpecial() {
 	return this->executedSpecial;
+}
+
+void CharacterActionTurn::setMaxBuildings(int maxBuildings) {
+	this->maxBuildings = maxBuildings;
+}
+
+int CharacterActionTurn::getMaxBuildings() {
+	return this->maxBuildings;
+}
+
+void CharacterActionTurn::buildBuilding() {
+	this->builtBuildings++;
+}
+
+bool CharacterActionTurn::buildingsBuilt() {
+	if (builtBuildings >= maxBuildings) {
+		return true;
+	}
+	return false;
 }
 
 void CharacterActionTurn::takeGold() {
@@ -61,6 +87,9 @@ void CharacterActionTurn::resetTurn() {
 	singleCardTaken = false;
 	executedSpecial = false;
 	finished = false;
+
+	maxBuildings = 1;
+	builtBuildings = 0;
 }
 
 std::string CharacterActionTurn::toString() {

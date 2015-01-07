@@ -16,6 +16,11 @@ public:
 	void selectSingleCardFromDeck();
 	bool tookSingleCard();
 
+	int getMaxBuildings();
+	void setMaxBuildings(int maxBuildings);
+	void buildBuilding();
+	bool buildingsBuilt();
+
 	void doSpecial();
 	bool didSpecial();
 
@@ -32,6 +37,8 @@ private:
 	bool goldTaken;
 	bool pulledCard;
 	bool singleCardTaken;
+	int maxBuildings;
+	int builtBuildings;
 	bool executedSpecial;
 	bool finished;
 };

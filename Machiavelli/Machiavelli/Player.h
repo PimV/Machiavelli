@@ -53,6 +53,22 @@ public:
 
 	/* Buildings */
 	bool constructBuildingCard(int index);
+	bool destroyBuilding(std::shared_ptr<Player> destroyer, int index);
+	int getConstructedBuildingCount();
+	void printBuildings();
+
+	/* Points */
+	bool checkAllColors();
+	void setFirstToEight();
+	bool isFirstToEight();
+	int getBuildingPoints();
+	int calculatePoints();
+
+	/* Apply Character Card Effects */
+	void applyKingEffect();
+	void applyBishopEffect();
+	void applyMerchantEffect();
+	void applyWarlordEffect();
 
 	/* Reset */
 	void resetForNextRound();
@@ -66,6 +82,7 @@ private:
 
 	bool isKing;
 	bool turn;
+	bool firstToEight;
 
 	std::shared_ptr<CharacterCard> character1;
 	std::shared_ptr<CharacterCard> character2;
