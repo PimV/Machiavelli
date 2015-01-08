@@ -14,6 +14,7 @@ public:
 	void setGame(std::shared_ptr<Game> game);
 	std::shared_ptr<Game> getGame();
 
+	bool isGlobalCommand(std::string command);
 	bool isGameCommand(std::string command);
 	bool isTurnIndependentCommand(std::string command);
 
@@ -59,8 +60,13 @@ public:
 private:
 	std::shared_ptr<std::map<std::shared_ptr<Player>, std::shared_ptr<std::vector<std::string>>>> previousCommands;
 	std::shared_ptr<Game> game;
+	std::map<std::string, std::string> gameCmds;
+	std::map<std::string, std::string> tiCmds;
+	std::map<std::string, std::string> globalCmds;
+
+
 	std::vector<std::string> gameCommands;
 	std::vector<std::string> globalCommands;
 	std::vector<std::string> turnIndependentCommands;
-};	
+};
 

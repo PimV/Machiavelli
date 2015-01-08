@@ -31,6 +31,10 @@ bool CharacterSelectionTurn::isOver() {
 	return false;
 }
 
+std::string CharacterSelectionTurn::printPossibleActions() {
+	return "std::string";
+}
+
 void CharacterSelectionTurn::resetTurn() {
 	this->coveredCard = false;
 	this->pickedCard = false;

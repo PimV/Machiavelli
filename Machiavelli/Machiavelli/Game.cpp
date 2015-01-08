@@ -253,7 +253,17 @@ void Game::callCharacterCard() {
 	Server::Instance().broadcast(this->turn->getPlayer()->getName() + " is aan de beurt met de " + this->turn->getPlayer()->getActiveCharacterCard()->getCharacterString());
 
 	this->applyCardEffects(this->turn->getPlayer());
-	this->turn->getPlayer()->getClient()->write(this->turn->getPlayer()->getActiveCharacterCard()->possibleActions());
+	this->turn->getPlayer()->getClient()->write(this->turn->printPossibleActions());
+	//this->turn->getPlayer()->getClient()->write(this->turn->getPlayer()->getActiveCharacterCard()->possibleActions());
+}
+
+void Game::printPossibleActions(std::shared_ptr<Player> player) {
+	if (!this->correctPlayerTurn(player)) {
+		player->getClient()->write("U bent nog niet aan de beurt. Wacht totdat de andere speler zijn/haar beurt over is.\r\n");
+		return;
+	}
+
+	this->turn->getPlayer()->getClient()->write(this->turn->printPossibleActions());
 }
 
 void Game::applyCardEffects(std::shared_ptr<Player> player) {

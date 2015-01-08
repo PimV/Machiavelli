@@ -135,15 +135,15 @@ bool Player::destroyBuilding(std::shared_ptr<Player> destroyer, int index) {
 			this->buildings.erase(this->buildings.begin() + index);
 			buildingDestroyed = true;
 		}
-		
+
 	}
 	else {
 		this->getClient()->write("Ongeldige index geselecteerd.\r\n");
 	}
 
 
-	
-	
+
+
 
 	return buildingDestroyed;
 }
@@ -232,7 +232,7 @@ bool Player::checkAllColors() {
 }
 
 int Player::getBuildingPoints() {
-	
+
 	int points = 0;
 	for (size_t i = 0; i < this->buildings.size(); i++) {
 		//Card specials for "Drakenpoort" and "Universiteit" 
@@ -242,7 +242,7 @@ int Player::getBuildingPoints() {
 		else {
 			points += this->buildings.at(i)->getCost();
 		}
-		
+
 	}
 	return points;
 }
@@ -265,7 +265,7 @@ int Player::calculatePoints() {
 		points += 2;
 	}
 
-	
+
 
 	return points;
 }
@@ -309,7 +309,7 @@ bool Player::hasConstructedBuildingByBuilding(Buildings building) {
 		if (this->buildings.at(i)->getBuilding() == building) {
 			return true;
 		}
-		
+
 	}
 	return false;
 }
@@ -394,6 +394,20 @@ std::string Player::printChoosableBuildingCards() {
 	return retVal;
 }
 
+std::string Player::getBuildingActions() {
+	std::string actions = "";
+	for (std::vector<std::shared_ptr<BuildingCard>>::size_type i = 0; i != this->choosableBuildingCards.size(); i++) {
+		std::shared_ptr<BuildingCard> card = this->choosableBuildingCards.at(i);
+		switch (card->getBuilding()) {
+		case Buildings::Laboratorium:
+			actions.append("\t - leg_bouwkaart <index> **LABORATORIUM SPECIAL** \r\n");
+			break;
+		}
+	}
+
+	return actions;
+}
+
 void Player::applyKingEffect() {
 	for (size_t i = 0; i < this->buildings.size(); i++) {
 		if (this->buildings.at(i)->getColor() == Colors::Geel) {
@@ -403,7 +417,7 @@ void Player::applyKingEffect() {
 }
 
 void Player::applyBishopEffect() {
-	for(size_t i = 0; i < this->buildings.size(); i++) {
+	for (size_t i = 0; i < this->buildings.size(); i++) {
 		if (this->buildings.at(i)->getColor() == Colors::Blauw) {
 			this->gold++;
 		}

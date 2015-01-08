@@ -10,64 +10,136 @@ InputHandler::InputHandler()
 {
 	previousCommands = std::make_shared<std::map<std::shared_ptr<Player>, std::shared_ptr<std::vector<std::string>>>>();
 
-	turnIndependentCommands.push_back("bekijk_karakterkaarten");
-	turnIndependentCommands.push_back("bekijk_bouwkaarten");
-	turnIndependentCommands.push_back("bekijk_gebouwen");
-	turnIndependentCommands.push_back("bekijk_gebouwen_tegenstander");
-	turnIndependentCommands.push_back("bekijk_goud");
+	/*globalCommands.push_back("broadcast");
+	globalCommands.push_back("historie");
+	globalCommands.push_back("naam");
+	globalCommands.push_back("disconnect");
+	globalCommands.push_back("quit");
+
+	globalCommands.push_back("help");*/
+
+	globalCmds.insert(std::pair<std::string, std::string>("broadcast", "broadcast"));
+	globalCmds.insert(std::pair<std::string, std::string>("historie", "historie"));
+	globalCmds.insert(std::pair<std::string, std::string>("naam", "naam <nieuwe_naam>"));
+	globalCmds.insert(std::pair<std::string, std::string>("help", "help"));
+	globalCmds.insert(std::pair<std::string, std::string>("disconnect", "disconnect"));
+	globalCmds.insert(std::pair<std::string, std::string>("quit", "quit"));
+	
+
+	//turnIndependentCommands.push_back("bekijk_karakterkaarten");
+	//turnIndependentCommands.push_back("bekijk_bouwkaarten");
+	//turnIndependentCommands.push_back("bekijk_gebouwen");
+	//turnIndependentCommands.push_back("bekijk_gebouwen_tegenstander");
+	//turnIndependentCommands.push_back("bekijk_goud");
+
+	tiCmds.insert(std::pair<std::string, std::string>("bekijk_karakterkaarten", "bekijk_karakterkaarten"));
+	tiCmds.insert(std::pair<std::string, std::string>("bekijk_bouwkaarten", "bekijk_bouwkaarten"));
+	tiCmds.insert(std::pair<std::string, std::string>("bekijk_gebouwen", "bekijk_gebouwen"));
+	tiCmds.insert(std::pair<std::string, std::string>("bekijk_gebouwen_tegenstander", "bekijk_gebouwen_tegenstander"));
+	tiCmds.insert(std::pair<std::string, std::string>("bekijk_goud", "bekijk_goud"));
 
 	//Character selection commands
-	gameCommands.push_back("pak");
-	gameCommands.push_back("dek");
-	gameCommands.push_back("bekijk_alle_karakterkaarten");
+	gameCmds.insert(std::pair<std::string, std::string>("pak", "pak <index>"));
+	gameCmds.insert(std::pair<std::string, std::string>("dek", "dek <index>"));
+	gameCmds.insert(std::pair<std::string, std::string>("bekijk_alle_karakterkaarten", "bekijk_alle_karakterkaarten"));
 
 	//Building card commands
-	gameCommands.push_back("pak_bouwkaarten");
-	gameCommands.push_back("selecteer_bouwkaart");
-	gameCommands.push_back("bouw_bouwkaart");
+	gameCmds.insert(std::pair<std::string, std::string>("pak_bouwkaarten", "pak_bouwkaarten"));
+	gameCmds.insert(std::pair<std::string, std::string>("selecteer_bouwkaart", "selecteer_bouwkaart <index>"));
+	gameCmds.insert(std::pair<std::string, std::string>("bouw_bouwkaart", "bouw_bouwkaart <index>"));
 
 	/* Moordenaar */
-	gameCommands.push_back("vermoord");
-	gameCommands.push_back("vermoord_opties");
+	gameCmds.insert(std::pair<std::string, std::string>("vermoord", "vermoord <index>"));
+	gameCmds.insert(std::pair<std::string, std::string>("vermoord_opties", "vermoord_opties"));
 
 	/* Dief */
-	gameCommands.push_back("besteel");
-	gameCommands.push_back("besteel_opties");
+	gameCmds.insert(std::pair<std::string, std::string>("besteel", "besteel <index>"));
+	gameCmds.insert(std::pair<std::string, std::string>("besteel_opties", "besteel_opties"));
 
 	/* Magiër */
-	gameCommands.push_back("ruil_hand");
-	gameCommands.push_back("ruil_kaarten");
+	gameCmds.insert(std::pair<std::string, std::string>("ruil_hand", "ruil_hand"));
+	gameCmds.insert(std::pair<std::string, std::string>("ruil_kaarten", "ruil_kaarten <kaartindex1,kaartindex2,kaartindex3>"));
 
 	/* Condottiere */
-	gameCommands.push_back("verwijder_gebouw");
-	gameCommands.push_back("verwijder_opties");
+	gameCmds.insert(std::pair<std::string, std::string>("verwijder_gebouw", "verwijder_gebouw <index>"));
+	gameCmds.insert(std::pair<std::string, std::string>("verwijder_opties", "verwijder_opties"));
 
 	/* Player Stats */
-	gameCommands.push_back("bekijk_karakterkaarten");
-	gameCommands.push_back("bekijk_bouwkaarten");
-	gameCommands.push_back("bekijk_gebouwen");
-	gameCommands.push_back("bekijk_gebouwen_tegenstander");
-	gameCommands.push_back("bekijk_goud");
+	gameCmds.insert(std::pair<std::string, std::string>("bekijk_karakterkaarten", "bekijk_karakterkaarten"));
+	gameCmds.insert(std::pair<std::string, std::string>("bekijk_bouwkaarten", "bekijk_bouwkaarten"));
+	gameCmds.insert(std::pair<std::string, std::string>("bekijk_gebouwen", "bekijk_gebouwen"));
+	gameCmds.insert(std::pair<std::string, std::string>("bekijk_gebouwen_tegenstander", "bekijk_gebouwen_tegenstander"));
+	gameCmds.insert(std::pair<std::string, std::string>("bekijk_goud", "bekijk_goud"));
 
 	//Take gold command
-	gameCommands.push_back("pak_goud");
+	gameCmds.insert(std::pair<std::string, std::string>("pak_goud", "pak_goud"));
 
 	//Turn over command
-	gameCommands.push_back("beurt_over");
+	gameCmds.insert(std::pair<std::string, std::string>("beurt_over", "beurt_over"));
 
-	//Help command
-	gameCommands.push_back("help");
+	//Help command	
+	gameCmds.insert(std::pair<std::string, std::string>("acties", "acties"));
+
+	////Character selection commands
+	//gameCommands.push_back("pak");
+	//gameCommands.push_back("dek");
+	//gameCommands.push_back("bekijk_alle_karakterkaarten");
+
+	////Building card commands
+	//gameCommands.push_back("pak_bouwkaarten");
+	//gameCommands.push_back("selecteer_bouwkaart");
+	//gameCommands.push_back("bouw_bouwkaart");
+
+	///* Moordenaar */
+	//gameCommands.push_back("vermoord");
+	//gameCommands.push_back("vermoord_opties");
+
+	///* Dief */
+	//gameCommands.push_back("besteel");
+	//gameCommands.push_back("besteel_opties");
+
+	///* Magiër */
+	//gameCommands.push_back("ruil_hand");
+	//gameCommands.push_back("ruil_kaarten");
+
+	///* Condottiere */
+	//gameCommands.push_back("verwijder_gebouw");
+	//gameCommands.push_back("verwijder_opties");
+
+	///* Player Stats */
+	//gameCommands.push_back("bekijk_karakterkaarten");
+	//gameCommands.push_back("bekijk_bouwkaarten");
+	//gameCommands.push_back("bekijk_gebouwen");
+	//gameCommands.push_back("bekijk_gebouwen_tegenstander");
+	//gameCommands.push_back("bekijk_goud");
+
+	////Take gold command
+	//gameCommands.push_back("pak_goud");
+
+	////Turn over command
+	//gameCommands.push_back("beurt_over");
+
+	////Help command	
+	//gameCommands.push_back("acties");
+}
+
+bool InputHandler::isGlobalCommand(std::string command) {
+	if (globalCmds.count(command)) {
+		return true;
+	}
+	return false;
 }
 
 bool InputHandler::isGameCommand(std::string command) {
-	if (std::find(gameCommands.begin(), gameCommands.end(), command) != gameCommands.end())	{
+
+	if (gameCmds.count(command)) {
 		return true;
 	}
 	return false;
 }
 
 bool InputHandler::isTurnIndependentCommand(std::string command) {
-	if (std::find(turnIndependentCommands.begin(), turnIndependentCommands.end(), command) != turnIndependentCommands.end())	{
+	if (tiCmds.count(command)) {
 		return true;
 	}
 	return false;
@@ -117,7 +189,6 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 		else if (params[0] == "bekijk_goud") {
 			this->checkGold(params, player);
 		}
-
 		return;
 	}
 
@@ -176,6 +247,9 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 	else if (params[0] == "ruil_kaarten") {
 		this->swapCards(params, player);
 	}
+	else if (params[0] == "acties") {
+		this->game->printPossibleActions(player);
+	}
 
 
 }
@@ -191,6 +265,15 @@ void InputHandler::handleGlobalCommand(std::vector<std::string> params, std::sha
 		for (std::vector<std::string>::size_type i = 0; i != previousCommands->at(player)->size(); i++) {
 			player->getClient()->write(previousCommands->at(player)->at(i) + "\r\n");
 		}
+
+	}
+	else if (params[0] == "help") {
+		player->getClient()->write("ALLE commando's (ook momenteel ongeldige commando's!): \r\n");
+		player->getClient()->write("GAME COMMANDS: \r\n");
+		for (auto iter : gameCmds) {
+			player->getClient()->write("\t - " + iter.second + "\r\n");
+		}
+		player->getClient()->write("GLOBAL COMMANDS: \r\n");
 
 	}
 	else if (params[0] == "naam") {

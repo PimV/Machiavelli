@@ -31,6 +31,7 @@ public:
 	bool correctPlayerTurn(std::shared_ptr<Player> player);
 	bool correctCharacterTurn(std::shared_ptr<Player> player, Characters character);
 	std::shared_ptr<BaseTurn> getTurn();
+	void printPossibleActions(std::shared_ptr<Player> player);
 
 	//Action handling
 	/* Character Card Selection */

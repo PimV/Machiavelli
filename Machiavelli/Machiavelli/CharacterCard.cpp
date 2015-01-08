@@ -89,24 +89,20 @@ bool CharacterCard::isMurdered() {
 }
 
 std::string CharacterCard::possibleActions() {
-	std::string actions = "Mogelijke acties voor de " + this->getCharacterString() + "\r\n";
-	actions.append("\t - beurt_over \r\n");
-	actions.append("\t - pak_goud \r\n");
-	actions.append("\t - pak_bouwkaarten \r\n");
-	actions.append("\t - leg_bouwkaart <index> \r\n");
-
+	//std::string actions = "Mogelijke acties voor de " + this->getCharacterString() + "\r\n";
+	std::string actions = "";
 	switch (this->getCharacter()) {
 	case Characters::Moordenaar:
-		actions.append("\t - vermoord <karakter_index> \r\n");
-		actions.append("\t - vermoord_opties \r\n");
+		actions.append("\t - vermoord <karakter_index> **MOORDENAAR SPECIAL**\r\n");
+		actions.append("\t - vermoord_opties **MOORDENAAR SPECIAL**\r\n");
 		break;
 	case Characters::Dief:
-		actions.append("\t - besteel_opties \r\n");
-		actions.append("\t - besteel <karakter_index> \r\n");
+		actions.append("\t - besteel_opties **DIEF SPECIAL**\r\n");
+		actions.append("\t - besteel <karakter_index> **DIEF SPECIAL**\r\n");
 		break;
 	case Characters::Magier:
-		actions.append("\t - ruil_hand \r\n");
-		actions.append("\t - ruil_kaarten <kaart1, kaart2, ...>\r\n");
+		actions.append("\t - ruil_hand **MAGIER SPECIAL**\r\n");
+		actions.append("\t - ruil_kaarten <kaart1, kaart2, ...> **MAGIER SPECIAL**\r\n");
 		break;
 	case Characters::Koning:
 
@@ -120,13 +116,11 @@ std::string CharacterCard::possibleActions() {
 
 		break;
 	case Characters::Condottiere:
-		actions.append("\t - verwijder_gebouw <gebouw_index>\r\n");
+		actions.append("\t - verwijder_gebouw <gebouw_index> **CONDOTTIERE SPECIAL**\r\n");
 		break;
 	default:
 		break;
 	}
-
-	actions.append("\t - help \r\n");
 	return actions;
 }
 

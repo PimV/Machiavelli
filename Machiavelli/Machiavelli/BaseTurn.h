@@ -17,6 +17,8 @@ public:
 	virtual void setOver(bool done);
 	virtual bool isOver();
 
+	virtual std::string printPossibleActions();
+
 	virtual void resetTurn();
 
 	virtual std::string toString();

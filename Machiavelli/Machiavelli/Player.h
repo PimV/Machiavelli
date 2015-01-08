@@ -50,6 +50,7 @@ public:
 	std::shared_ptr<BuildingCard> getChoosableBuildingCardByIndex(int index);
 	void emptyChoosableBuildingCards();
 	std::string printChoosableBuildingCards();
+	std::string getBuildingActions();
 
 	/* Buildings */
 	bool constructBuildingCard(int index);

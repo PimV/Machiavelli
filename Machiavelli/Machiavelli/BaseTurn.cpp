@@ -33,6 +33,8 @@ bool BaseTurn::isOver() {
 
 void BaseTurn::resetTurn() { }
 
+std::string BaseTurn::printPossibleActions() { return "actions";  }
+
 std::string BaseTurn::toString() { return "baseturn"; }
 
 BaseTurn::~BaseTurn()

@@ -28,6 +28,8 @@ public:
 
 	bool isOver();
 
+	std::string printPossibleActions();
+
 	void resetTurn();
 
 	std::string toString();

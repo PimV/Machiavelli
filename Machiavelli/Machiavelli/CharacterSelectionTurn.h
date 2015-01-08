@@ -17,6 +17,8 @@ public:
 
 	void resetTurn();
 
+	std::string printPossibleActions();
+
 	std::string toString();
 
 	virtual ~CharacterSelectionTurn();

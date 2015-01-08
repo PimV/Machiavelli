@@ -81,6 +81,20 @@ bool CharacterActionTurn::tookSingleCard() {
 	return 	singleCardTaken;
 }
 
+std::string CharacterActionTurn::printPossibleActions() {
+	std::string actions = "Mogelijke acties voor deze beurt: \r\n";
+	actions.append("\t - beurt_over \r\n");
+	actions.append("\t - pak_goud \r\n");
+	actions.append("\t - pak_bouwkaarten \r\n");
+	actions.append("\t - bouw_bouwkaart <index> \r\n");
+	actions.append("\t - help \r\n");
+
+	actions.append(this->getPlayer()->getActiveCharacterCard()->possibleActions());
+	actions.append(this->getPlayer()->getBuildingActions());
+
+	return actions;
+}
+
 void CharacterActionTurn::resetTurn() {
 	goldTaken = false;
 	pulledCard = false;
