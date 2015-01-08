@@ -102,6 +102,9 @@
     <ClInclude Include="CharacterActionTurn.h">
       <Filter>Header Files\Turn</Filter>
     </ClInclude>
+    <ClInclude Include="Buildings.h">
+      <Filter>Header Files\Entity\Cards</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

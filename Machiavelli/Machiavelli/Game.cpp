@@ -335,7 +335,25 @@ void Game::takeCards(std::shared_ptr<Player> player) {
 	for (int i = 0; i < 2; i++) {
 		player->addChoosableBuildingCards(this->buildingDeck->pop());
 	}
-	player->printChoosableBuildingCards();
+
+	if (player->hasConstructedBuildingByBuilding(Buildings::Bibliotheek)) {
+		player->getClient()->write("Omdat u de Bibliotheek heeft gebouwd, mag u beide getrokken kaarten direct in uw hand nemen: \r\n");
+		player->getClient()->write(player->printChoosableBuildingCards());
+
+		//Two possibilities
+		player->addBuildingCard(player->getChoosableBuildingCardByIndex(0));
+		player->addBuildingCard(player->getChoosableBuildingCardByIndex(1));
+
+		player->emptyChoosableBuildingCards();
+		caTurn->selectSingleCardFromDeck();
+		
+	}
+	else {
+		player->getClient()->write("Pak één van de twee kaarten (de andere wordt gedekt op tafel gelegd) via \"selecteer_bouwkaart <index>\": \r\n");
+		player->getClient()->write(player->printChoosableBuildingCards());
+	}
+
+
 
 	caTurn->takeCardsFromDeck();
 }

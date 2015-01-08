@@ -9,15 +9,17 @@ BuildingCard::BuildingCard()
 	this->setCost(-1);
 	this->setColor(Colors::NOT_SET);
 	this->setDescription("NOT SET");
+	this->setBuilding(Buildings::NOT_SET);
 }
 
 /**
 *	Create initialized card
 **/
-BuildingCard::BuildingCard(std::string name, int cost, Colors color, std::string description) {
+BuildingCard::BuildingCard(std::string name, Buildings building, int cost, Colors color, std::string description) {
 	this->setName(name);
 	this->setCost(cost);
 	this->setColor(color);
+	this->setBuilding(building);
 	this->setDescription("NOT SET");
 }
 
@@ -33,6 +35,14 @@ void BuildingCard::setName(std::string name) {
 **/
 std::string BuildingCard::getName() {
 	return this->name;
+}
+
+void BuildingCard::setBuilding(Buildings building) {
+	this->building = building;
+}
+
+Buildings BuildingCard::getBuilding() {
+	return this->building;
 }
 
 /**

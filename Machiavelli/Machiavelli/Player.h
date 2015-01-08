@@ -49,12 +49,13 @@ public:
 	void addChoosableBuildingCards(std::shared_ptr<BuildingCard> card);
 	std::shared_ptr<BuildingCard> getChoosableBuildingCardByIndex(int index);
 	void emptyChoosableBuildingCards();
-	void printChoosableBuildingCards();
+	std::string printChoosableBuildingCards();
 
 	/* Buildings */
 	bool constructBuildingCard(int index);
 	bool destroyBuilding(std::shared_ptr<Player> destroyer, int index);
 	int getConstructedBuildingCount();
+	bool hasConstructedBuildingByBuilding(Buildings building);
 	std::string printBuildings();
 
 	/* Points */

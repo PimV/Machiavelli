@@ -26,6 +26,7 @@ std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> Loader::loadBuildingCards(s
 		std::string colorString;
 		Colors color = Colors::NOT_SET;
 		std::string description = "NOT SET";
+		Buildings building = Buildings::NOT_SET;
 
 		int i = 0;
 
@@ -33,6 +34,87 @@ std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> Loader::loadBuildingCards(s
 		{
 			if (i == 0) {
 				name = cell;
+				if (name == "Landgoed") {
+					building = Buildings::Landgoed;
+				}
+				else if (name == "Kasteel") {
+					building = Buildings::Kasteel;
+				}
+				else if (name == "Paleis") {
+					building = Buildings::Paleis;
+				}
+				else if (name == "Taveerne") {
+					building = Buildings::Taveerne;
+				}
+				else if (name == "Markt") {
+					building = Buildings::Markt;
+				}
+				else if (name == "Winkels") {
+					building = Buildings::Winkels;
+				}
+				else if (name == "Handelshuis") {
+					building = Buildings::Handelshuis;
+				}
+				else if (name == "Haven") {
+					building = Buildings::Haven;
+				}
+				else if (name == "Raadhuis") {
+					building = Buildings::Raadhuis;
+				} 
+				else if (name == "Tempel") {
+					building = Buildings::Tempel;
+				}
+				else if (name == "Kerk") {
+					building = Buildings::Kerk;
+				}
+				else if (name == "Klooster") {
+					building = Buildings::Klooster;
+				}
+				else if (name == "Kathedraal") {
+					building = Buildings::Kathedraal;
+				}
+				else if (name == "Wachttoren") {
+					building = Buildings::Wachttoren;
+				}
+				else if (name == "Gevangenis") {
+					building = Buildings::Gevangenis;
+				}
+				else if (name == "Toernooiveld") {
+					building = Buildings::Toernooiveld;
+				}
+				else if (name == "Burcht") {
+					building = Buildings::Burcht;
+				}
+				else if (name == "Hof der Wonderen") {
+					building = Buildings::Hof_der_Wonderen;
+				}
+				else if (name == "Kerker") {
+					building = Buildings::Kerker;
+				}
+				else if (name == "Kerkhof") {
+					building = Buildings::Kerkhof;
+				}
+				else if (name == "Laboratorium") {
+					building = Buildings::Laboratorium;
+				}
+				else if (name == "Werkplaats") {
+					building = Buildings::Werkplaats;
+				}
+				else if (name == "Observatorium") {
+					building = Buildings::Observatorium;
+				}
+				else if (name == "Bibliotheek") {
+					building = Buildings::Bibliotheek;
+				}
+				else if (name == "School voor magiërs") {
+					building = Buildings::Magier_School;
+				}
+				else if (name == "Drakenpoort") {
+					building = Buildings::Drakenpoort;
+				}
+				else if (name == "Universiteit") {
+					building = Buildings::Universiteit;
+				}
 			}
 			else if (i == 1) {
 				cost = std::stoi(cell);
@@ -62,7 +144,7 @@ std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> Loader::loadBuildingCards(s
 
 			i++;
 		}
-		std::shared_ptr<BuildingCard> card = std::make_shared<BuildingCard>(name, cost, color, description);
+		std::shared_ptr<BuildingCard> card = std::make_shared<BuildingCard>(name, building, cost, color, description);
 		deck->push(card);
 	}
 	return deck;

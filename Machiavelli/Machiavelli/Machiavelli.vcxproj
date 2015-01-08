@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="BaseTurn.h" />
     <ClInclude Include="BuildingCard.h" />
+    <ClInclude Include="Buildings.h" />
     <ClInclude Include="CardType.h" />
     <ClInclude Include="CharacterActionTurn.h" />
     <ClInclude Include="CharacterCard.h" />

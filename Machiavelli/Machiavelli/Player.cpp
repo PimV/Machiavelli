@@ -11,6 +11,8 @@ Player::Player()
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
+	this->buildings.push_back(std::make_shared<BuildingCard>("TestLib", Buildings::Bibliotheek, 5, Colors::Rood, "TestDesc"));
+
 	this->gold = 100;
 
 	this->client = nullptr;
@@ -233,7 +235,14 @@ int Player::getBuildingPoints() {
 	
 	int points = 0;
 	for (size_t i = 0; i < this->buildings.size(); i++) {
-		points += this->buildings.at(i)->getCost();
+		//Card specials for "Drakenpoort" and "Universiteit" 
+		if (this->buildings.at(i)->getBuilding() == Buildings::Drakenpoort || this->buildings.at(i)->getBuilding() == Buildings::Universiteit) {
+			points += 8;
+		}
+		else {
+			points += this->buildings.at(i)->getCost();
+		}
+		
 	}
 	return points;
 }
@@ -255,6 +264,8 @@ int Player::calculatePoints() {
 	if (this->getConstructedBuildingCount() >= 8) {
 		points += 2;
 	}
+
+	
 
 	return points;
 }
@@ -289,6 +300,16 @@ bool Player::hasCharacterChard(std::shared_ptr<CharacterCard> card) {
 bool Player::hasCharacterCardByCharacter(Characters character) {
 	if ((character1 != nullptr && character1->getCharacter() == character) || (character2 != nullptr && character2->getCharacter() == character)) {
 		return true;
+	}
+	return false;
+}
+
+bool Player::hasConstructedBuildingByBuilding(Buildings building) {
+	for (size_t i = 0; i < this->buildings.size(); i++) {
+		if (this->buildings.at(i)->getBuilding() == building) {
+			return true;
+		}
+		
 	}
 	return false;
 }
@@ -361,8 +382,8 @@ std::string Player::printBuildings() {
 	return retVal;
 }
 
-void Player::printChoosableBuildingCards() {
-	std::string retVal = "Pak één van de twee kaarten (de andere wordt gedekt op tafel gelegd): \r\n";
+std::string Player::printChoosableBuildingCards() {
+	std::string retVal = "";
 	if (this->choosableBuildingCards.size() > 0) {
 		for (std::vector<std::shared_ptr<BuildingCard>>::size_type i = 0; i != this->choosableBuildingCards.size(); i++) {
 			std::shared_ptr<BuildingCard> card = this->choosableBuildingCards.at(i);
@@ -370,7 +391,7 @@ void Player::printChoosableBuildingCards() {
 		}
 	}
 
-	this->getClient()->write(retVal);
+	return retVal;
 }
 
 void Player::applyKingEffect() {
