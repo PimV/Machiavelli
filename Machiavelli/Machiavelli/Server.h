@@ -22,6 +22,7 @@ public:
 	void run();
 	void stop();
 
+	void wait();
 	void handle_client(Socket* socket);
 	void consume_command();
 	void broadcast(std::string msg);

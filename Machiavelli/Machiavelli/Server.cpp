@@ -21,17 +21,24 @@ void Server::run() {
 	consumer.detach(); // detaching is usually ugly, but in this case the right thing to do
 
 	//// create a server socket
+	
+	this->wait();
+
+	//std::thread acceptClients(&Server::wait, this);
+	//acceptClients.detach();
+
+	
+
+}
+
+void Server::wait() {
 	ServerSocket server(Server::tcp_port);
-
-
-
-	while (running) {	
-
+	while (running) {
 		try {
 			std::cout << "Server awaiting players..." << std::endl;
 			Socket* client = nullptr;
 			while ((client = server.accept()) != nullptr && running) {
-		
+
 				if (this->game->getPlayerCount() >= 2) {
 					client->write("Het spijt ons, maar het spel is al begonnen of heeft al genoeg spelers! \r\n");
 					client->write("Probeer het later nog eens! \r\n");
@@ -39,7 +46,7 @@ void Server::run() {
 				}
 				//Create new socket
 				thread handler{ &Server::handle_client, this, client };
-				handler.detach();	
+				handler.detach();
 
 				std::cout << "Server awaiting players... again..." << std::endl;
 
@@ -52,12 +59,12 @@ void Server::run() {
 			cerr << ex.what() << ", resuming..." << '\n';
 		}
 	}
-
 }
 
 void Server::stop() {
 	OutputDebugStringW(L"Stopping server...\r\n");
 	running = false;
+	OutputDebugStringW(L"Stopping server...\r\n");
 }
 
 
@@ -145,6 +152,8 @@ void Server::consume_command() // runs in its own thread
 			cerr << "trying to handle command for client who has disappeared...\n";
 		}
 	}
+
+	std::this_thread::yield();
 }
 
 

@@ -147,7 +147,7 @@ Socket::~Socket()
 
 void Socket::close()
 {
-	std::cerr << "will close socket " << sock << std::endl;
+	std::cerr << "will close socket " << sock  << std::endl;
 #if defined(__APPLE__) || defined(__linux__)
 	throw_if_min1(::close(sock));
 #else
@@ -203,6 +203,17 @@ Socket *ServerSocket::accept()
 	Socket* client = new Socket(fd, client_addr);
 	std::cerr << "Connection accepted from " << client->get_dotted_ip() << ", with socket " << fd << std::endl;
 	return client;
+}
+
+void ServerSocket::close()
+{
+	std::cerr << "will close server_socket " << sock << std::endl;
+#if defined(__APPLE__) || defined(__linux__)
+	throw_if_min1(::close(sock));
+#else
+	::closesocket(sock);
+#endif
+	sock = 0;
 }
 
 #pragma mark ClientSocket

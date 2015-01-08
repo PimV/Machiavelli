@@ -42,7 +42,7 @@ public:
 
 	SOCKET get() const { return sock; }
 	void set(SOCKET sock) { this->sock = sock; }
-	void close();
+	virtual void close();
 	std::string get_dotted_ip() const;
 
 	ssize_t read(char *buf, size_t maxlen);
@@ -58,6 +58,7 @@ class ServerSocket : public Socket
 {
 public:
 	ServerSocket(int port);
+	void close();
 	Socket* accept();
 };
 
