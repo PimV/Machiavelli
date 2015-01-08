@@ -30,7 +30,7 @@ public:
 	std::string toString();
 private:
 	std::vector<T> elem;
-	
+
 };
 
 template<class T>
@@ -56,7 +56,9 @@ void Deck<T>::push(const T& t) {
 template<class T>
 T Deck<T>::pop() {
 	if (empty()) {
-		throw std::out_of_range("underflow");
+		std::cout << "Deck empty, can't pop" << std::endl;
+		return nullptr;
+		//throw std::out_of_range("underflow");
 	}
 	auto x = elem.back();
 	elem.pop_back();
@@ -66,18 +68,17 @@ T Deck<T>::pop() {
 template<class T>
 T Deck<T>::peek() {
 	if (empty()) {
-		throw std::out_of_range("underflow");
+		std::cout << "Deck empty, can't peek" << std::endl;
+		return nullptr;
+		//throw std::out_of_range("underflow");
 	}
 	return elem.back();
 }
 
 template<class T>
 void Deck<T>::shuffle() {
-	if (empty()) {
-		throw std::out_of_range("underflow");
-	}
 	std::srand(unsigned(std::time(0)));
-	
+
 	std::random_shuffle(elem.begin(), elem.end());
 }
 
@@ -92,7 +93,7 @@ template<class T>
 std::string Deck<T>::toString() {
 	std::string retVal = "";
 	for (size_t i = 0; i < elem.size(); i++) {
-		retVal.append("[" + std::to_string(i+1) + "] " + elem.at(i)->toString() + "\r\n");
+		retVal.append("[" + std::to_string(i + 1) + "] " + elem.at(i)->toString() + "\r\n");
 		//std::cout << elem.at(i)->toString() << std::endl;
 	}
 	return retVal;

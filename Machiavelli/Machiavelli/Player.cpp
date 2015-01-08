@@ -11,7 +11,7 @@ Player::Player()
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	this->buildings.push_back(std::make_shared<BuildingCard>("TestLib", Buildings::Bibliotheek, 5, Colors::Rood, "TestDesc"));
+	this->buildings.push_back(std::make_shared<BuildingCard>("TestLib", Buildings::Werkplaats, 5, Colors::Rood, "TestDesc"));
 
 	this->gold = 100;
 
@@ -108,6 +108,17 @@ bool Player::constructBuildingCard(int index) {
 	}
 
 	return buildingConstructed;
+}
+
+std::shared_ptr<CharacterCard> Player::getCharacterCardByCharacter(Characters character) {
+	if (character1->getCharacter() == character) {
+		return character1;
+	}
+
+	if (character2->getCharacter() == character) {
+		return character2;
+	}
+	return nullptr;
 }
 
 bool Player::destroyBuilding(std::shared_ptr<Player> destroyer, int index) {
@@ -314,6 +325,16 @@ bool Player::hasConstructedBuildingByBuilding(Buildings building) {
 	return false;
 }
 
+std::shared_ptr<BuildingCard> Player::getConstructedBuildingByBuilding(Buildings building) {
+	for (size_t i = 0; i < this->buildings.size(); i++) {
+		if (this->buildings.at(i)->getBuilding() == building) {
+			return this->buildings.at(i);
+		}
+
+	}
+	return nullptr;
+}
+
 void Player::addBuildingCard(std::shared_ptr<BuildingCard> card) {
 	this->buildingCards.push_back(card);
 }
@@ -396,12 +417,15 @@ std::string Player::printChoosableBuildingCards() {
 
 std::string Player::getBuildingActions() {
 	std::string actions = "";
-	for (std::vector<std::shared_ptr<BuildingCard>>::size_type i = 0; i != this->choosableBuildingCards.size(); i++) {
-		std::shared_ptr<BuildingCard> card = this->choosableBuildingCards.at(i);
+	for (std::vector<std::shared_ptr<BuildingCard>>::size_type i = 0; i != this->buildings.size(); i++) {
+		std::shared_ptr<BuildingCard> card = this->buildings.at(i);
 		switch (card->getBuilding()) {
 		case Buildings::Laboratorium:
-			actions.append("\t - leg_bouwkaart <index> **LABORATORIUM SPECIAL** \r\n");
+			actions.append("\t - laboratorium_special <index> \r\n");
 			break;
+		case Buildings::Werkplaats:
+			actions.append("\t - werkplaats_special \r\n");
+			break; 
 		}
 	}
 
@@ -438,6 +462,12 @@ void Player::applyWarlordEffect() {
 		if (this->buildings.at(i)->getColor() == Colors::Rood) {
 			this->gold++;
 		}
+	}
+}
+
+void Player::resetBuildingSpecials() {
+	for (auto iter : buildings) {
+		iter->reset();
 	}
 }
 

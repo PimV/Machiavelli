@@ -21,6 +21,7 @@ CharacterCard::CharacterCard(std::string name, int id, Characters character) {
 	this->setCharacter(character);
 	this->setMurdered(false);
 	this->setPickpocketed(false);
+	std::cout << "new card pickpocket false" << std::endl;
 }
 
 /**

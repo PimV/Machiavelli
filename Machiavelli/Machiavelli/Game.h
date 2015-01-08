@@ -30,6 +30,7 @@ public:
 	void applyCardEffects(std::shared_ptr<Player> player);
 	bool correctPlayerTurn(std::shared_ptr<Player> player);
 	bool correctCharacterTurn(std::shared_ptr<Player> player, Characters character);
+	bool correctBuildingTurn(std::shared_ptr<Player> player, Buildings building);
 	std::shared_ptr<BaseTurn> getTurn();
 	void printPossibleActions(std::shared_ptr<Player> player);
 
@@ -55,6 +56,9 @@ public:
 
 	void swapHands(std::shared_ptr<Player> player);
 	void swapCards(std::shared_ptr<Player> player, std::vector<int> indices);
+
+	void workshopSpecial(std::shared_ptr<Player> player);
+
 
 	//Player handling
 	std::shared_ptr<Player> addPlayer(std::shared_ptr<Socket> client);

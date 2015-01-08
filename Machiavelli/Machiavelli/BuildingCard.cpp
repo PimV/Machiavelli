@@ -10,6 +10,8 @@ BuildingCard::BuildingCard()
 	this->setColor(Colors::NOT_SET);
 	this->setDescription("NOT SET");
 	this->setBuilding(Buildings::NOT_SET);
+	this->specialCard = false;
+	this->specialExecuted = false;
 }
 
 /**
@@ -21,6 +23,8 @@ BuildingCard::BuildingCard(std::string name, Buildings building, int cost, Color
 	this->setColor(color);
 	this->setBuilding(building);
 	this->setDescription("NOT SET");
+	this->specialCard = false;
+	this->specialExecuted = false;
 }
 
 /**
@@ -103,6 +107,23 @@ std::string BuildingCard::getDescription() {
 	return this->description;
 }
 
+void BuildingCard::giveSpecial() {
+	this->specialCard = true;
+}
+
+bool BuildingCard::hasSpecial() {
+	return this->specialCard;
+}
+
+bool BuildingCard::didSpecial() {
+	return this->specialExecuted;
+}
+
+
+void BuildingCard::doSpecial() {
+	this->specialExecuted = true;
+}
+
 std::string BuildingCard::toString() {
 	std::string retVal = "Name: ";
 	retVal.append(this->getName());
@@ -112,8 +133,10 @@ std::string BuildingCard::toString() {
 	retVal.append(this->getColorString());
 
 	return retVal;
-	
+}
 
+void BuildingCard::reset() {
+	this->specialExecuted = false;
 }
 
 /**

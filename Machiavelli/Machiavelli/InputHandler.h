@@ -51,6 +51,9 @@ public:
 	void remove(std::vector<std::string> params, std::shared_ptr<Player> player);
 	void removeOptions(std::vector<std::string> params, std::shared_ptr<Player> player);
 
+	/* Buildings */
+	void labSpecial(std::vector<std::string> params, std::shared_ptr<Player> player);
+
 	//Random
 	std::vector<std::string> splitOnSpace(std::string input);
 	std::vector<std::string> splitOnComma(std::string input);

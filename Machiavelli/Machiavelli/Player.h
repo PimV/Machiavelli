@@ -29,6 +29,7 @@ public:
 	bool takeCharacterCard(std::shared_ptr<CharacterCard> card);
 	bool hasCharacterChard(std::shared_ptr<CharacterCard> card);
 	bool hasCharacterCardByCharacter(Characters character);
+	std::shared_ptr<CharacterCard> getCharacterCardByCharacter(Characters character);
 
 	/* Gold */
 	void changeGoldBy(int amount);
@@ -57,6 +58,7 @@ public:
 	bool destroyBuilding(std::shared_ptr<Player> destroyer, int index);
 	int getConstructedBuildingCount();
 	bool hasConstructedBuildingByBuilding(Buildings building);
+	std::shared_ptr<BuildingCard> getConstructedBuildingByBuilding(Buildings building);
 	std::string printBuildings();
 
 	/* Points */
@@ -73,6 +75,7 @@ public:
 	void applyWarlordEffect();
 
 	/* Reset */
+	void resetBuildingSpecials();
 	void resetForNextRound();
 
 

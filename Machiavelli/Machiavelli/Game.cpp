@@ -199,27 +199,29 @@ bool Game::validateCharacterCardInput(int index) {
 void Game::callCharacterCard() {
 	for (size_t i = currentCharacterCardIndex; i < this->characterOrderDeck->size(); i++) {
 		std::shared_ptr<CharacterCard> card = this->characterOrderDeck->get(i);
+		bool pickpocketed = card->isPickpocketed();
+		bool murdered = card->isMurdered();
 		std::shared_ptr<Player> player = nullptr;
 		if (player1->hasCharacterChard(card)) {
+			card = player1->getCharacterCardByCharacter(card->getCharacter());
 			player = player1;
 		}
 		else if (player2->hasCharacterChard(card)) {
+			card = player2->getCharacterCardByCharacter(card->getCharacter());
 			player = player2;
 		}
 
-		if (player != nullptr) {
-
-		}
+		
 
 		if (player1->hasCharacterChard(card)) {
-			if (card->isMurdered()) {
+			if (murdered) {
 				std::cout << "Skipping " << card->getCharacterString() << " cause murdered" << std::endl;
 				turns++;
 				currentCharacterCardIndex = i + 1;
 				continue;
 			}
 
-			if (card->isPickpocketed()) {
+			if (pickpocketed) {
 				Server::Instance().broadcast(player2->getName() + " heeft de Dief achter een karakter van " + player1->getName() + " gestuurd.");
 				Server::Instance().broadcast(player2->getName() + " krijgt daarom al het goud van " + player1->getName() + "(" + std::to_string(player1->getGold()) + ")");
 				player2->changeGoldBy(player1->getGold());
@@ -232,13 +234,14 @@ void Game::callCharacterCard() {
 			break;
 		}
 		else if (player2->hasCharacterChard(card)) {
-			if (card->isMurdered()) {
+			
+			if (murdered) {
 				std::cout << "Skipping " << card->getCharacterString() << " cause murdered" << std::endl;
 				turns++;
 				currentCharacterCardIndex = i + 1;
 				continue;
 			}
-			if (card->isPickpocketed()) {
+			if (pickpocketed) {
 				Server::Instance().broadcast(player1->getName() + " heeft de Dief achter een karakter van " + player2->getName() + " gestuurd.");
 				Server::Instance().broadcast(player1->getName() + " krijgt daarom al het goud van " + player2->getName() + "(" + std::to_string(player2->getGold()) + ")");
 				player1->changeGoldBy(player2->getGold());
@@ -264,6 +267,50 @@ void Game::printPossibleActions(std::shared_ptr<Player> player) {
 	}
 
 	this->turn->getPlayer()->getClient()->write(this->turn->printPossibleActions());
+}
+
+void Game::workshopSpecial(std::shared_ptr<Player> player) {
+	if (this->turn->getType() != Turns::CHAR_ACTION) {
+		player->getClient()->write("Deze actie kan nog niet uitgevoerd worden, omdat het spel in een andere fase zit.\r\n");
+		return;
+	}
+
+	if (!this->correctPlayerTurn(player)) {
+		player->getClient()->write("U bent nog niet aan de beurt. Wacht totdat de andere speler zijn/haar beurt over is.\r\n");
+		return;
+	}
+
+	if (!this->correctBuildingTurn(player, Buildings::Werkplaats)) {
+		player->getClient()->write("U kunt de speciale actie van de Werkplaats niet gebruiken, omdat u dit gebouw niet heeft gebouwd.\r\n");
+		return;
+	}
+	std::shared_ptr<BuildingCard> building = player->getConstructedBuildingByBuilding(Buildings::Werkplaats);
+
+	if (building->didSpecial()) {
+		player->getClient()->write("U heeft deze speciale actie van de Werkplaats deze beurt al eens uitgevoerd.\r\n");
+		return;
+	}
+
+	if (player->getGold() >= 3) {
+		player->getClient()->write("U betaalt 3 goudstukken voor de volgende 2 bouwkaarten: \r\n");
+
+		std::shared_ptr<BuildingCard> newCard = this->buildingDeck->pop();
+		player->getClient()->write("\t " + newCard->toString() + "\r\n");
+		player->addBuildingCard(newCard);
+
+		newCard = this->buildingDeck->pop();
+		player->getClient()->write("\t " + newCard->toString() + "\r\n");
+		player->addBuildingCard(newCard);
+		player->changeGoldBy(-3);
+		
+		building->doSpecial();
+	}
+	else {
+		player->getClient()->write("U heeft niet genoeg goud om dze speciale actie uit te voeren (minimaal 3 goud nodig).\r\n");
+	}
+
+
+
 }
 
 void Game::applyCardEffects(std::shared_ptr<Player> player) {
@@ -356,7 +403,7 @@ void Game::takeCards(std::shared_ptr<Player> player) {
 
 		player->emptyChoosableBuildingCards();
 		caTurn->selectSingleCardFromDeck();
-		
+
 	}
 	else {
 		player->getClient()->write("Pak één van de twee kaarten (de andere wordt gedekt op tafel gelegd) via \"selecteer_bouwkaart <index>\": \r\n");
@@ -374,7 +421,7 @@ void Game::removeBuilding(std::shared_ptr<Player> player, int index) {
 		player->getClient()->write("U heeft al uw speciale karaktereigenschap gebruikt deze beurt!\r\n");
 		return;
 	}
-	
+
 	std::shared_ptr<Player> opponent = nullptr;
 	if (player == player1) {
 		opponent = player2;
@@ -416,7 +463,7 @@ void Game::printRemoveOptions(std::shared_ptr<Player> player) {
 
 	player->getClient()->write("De gebouwen van uw tegenstander: \r\n");
 	player->getClient()->write(opponent->printBuildings());
-	 
+
 }
 
 void Game::printOpponentBuildings(std::shared_ptr<Player> player) {
@@ -537,6 +584,11 @@ void Game::pickpocketCharacter(std::shared_ptr<Player> player, int index) {
 			return;
 		}
 
+		if (card->isMurdered()) {
+			player->getClient()->write("U kunt niet van een vermoord karakter stelen!\r\n");
+			return;
+		}
+
 		card->setPickpocketed(true);
 		player->getClient()->write("U heeft de Dief achter de " + card->getCharacterString() + " gestuurd.\r\n");
 		caTurn->doSpecial();
@@ -620,6 +672,13 @@ void Game::swapCards(std::shared_ptr<Player> player, std::vector<int> indices) {
 
 bool Game::correctPlayerTurn(std::shared_ptr<Player> player) {
 	if (this->turn->getPlayer() == player) {
+		return true;
+	}
+	return false;
+}
+
+bool Game::correctBuildingTurn(std::shared_ptr<Player> player, Buildings building) {
+	if (player->hasConstructedBuildingByBuilding(building)) {
 		return true;
 	}
 	return false;
@@ -727,6 +786,10 @@ void Game::switchTurn() {
 			this->turn->setPlayer(player1);
 			std::cout << "Turn to player1" << std::endl;
 		}
+
+		//Reset building specials
+		player1->resetBuildingSpecials();
+		player2->resetBuildingSpecials();
 
 		//Switch turn types
 		this->switchTurnTypes();

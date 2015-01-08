@@ -10,27 +10,12 @@ InputHandler::InputHandler()
 {
 	previousCommands = std::make_shared<std::map<std::shared_ptr<Player>, std::shared_ptr<std::vector<std::string>>>>();
 
-	/*globalCommands.push_back("broadcast");
-	globalCommands.push_back("historie");
-	globalCommands.push_back("naam");
-	globalCommands.push_back("disconnect");
-	globalCommands.push_back("quit");
-
-	globalCommands.push_back("help");*/
-
 	globalCmds.insert(std::pair<std::string, std::string>("broadcast", "broadcast"));
 	globalCmds.insert(std::pair<std::string, std::string>("historie", "historie"));
 	globalCmds.insert(std::pair<std::string, std::string>("naam", "naam <nieuwe_naam>"));
 	globalCmds.insert(std::pair<std::string, std::string>("help", "help"));
 	globalCmds.insert(std::pair<std::string, std::string>("disconnect", "disconnect"));
 	globalCmds.insert(std::pair<std::string, std::string>("quit", "quit"));
-	
-
-	//turnIndependentCommands.push_back("bekijk_karakterkaarten");
-	//turnIndependentCommands.push_back("bekijk_bouwkaarten");
-	//turnIndependentCommands.push_back("bekijk_gebouwen");
-	//turnIndependentCommands.push_back("bekijk_gebouwen_tegenstander");
-	//turnIndependentCommands.push_back("bekijk_goud");
 
 	tiCmds.insert(std::pair<std::string, std::string>("bekijk_karakterkaarten", "bekijk_karakterkaarten"));
 	tiCmds.insert(std::pair<std::string, std::string>("bekijk_bouwkaarten", "bekijk_bouwkaarten"));
@@ -70,6 +55,10 @@ InputHandler::InputHandler()
 	gameCmds.insert(std::pair<std::string, std::string>("bekijk_gebouwen", "bekijk_gebouwen"));
 	gameCmds.insert(std::pair<std::string, std::string>("bekijk_gebouwen_tegenstander", "bekijk_gebouwen_tegenstander"));
 	gameCmds.insert(std::pair<std::string, std::string>("bekijk_goud", "bekijk_goud"));
+
+	/* Building special moves */
+	gameCmds.insert(std::pair<std::string, std::string>("werkplaats_special", "werkplaats_special"));
+	gameCmds.insert(std::pair<std::string, std::string>("laboratorium_special", "laboratorium_special <index>"));
 
 	//Take gold command
 	gameCmds.insert(std::pair<std::string, std::string>("pak_goud", "pak_goud"));
@@ -250,6 +239,12 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 	else if (params[0] == "acties") {
 		this->game->printPossibleActions(player);
 	}
+	else if (params[0] == "werkplaats_special") {
+		this->game->workshopSpecial(player);
+	}
+	else if (params[0] == "laboratorium_special") {
+		this->labSpecial(params, player);
+	}
 
 
 }
@@ -365,7 +360,7 @@ void InputHandler::murder(std::vector<std::string> params, std::shared_ptr<Playe
 		player->getClient()->write("Deze actie kan nog niet uitgevoerd worden, omdat het spel in een andere fase zit.\r\n");
 		return;
 	}
-	if (this->game->correctCharacterTurn(player, Characters::Dief)) {
+	if (this->game->correctCharacterTurn(player, Characters::Moordenaar)) {
 		if (params.size() > 1) {
 			int index = stoi(params[1]);
 			index = index - 1; // correct for + 1 visible to user
@@ -527,6 +522,25 @@ void InputHandler::removeOptions(std::vector<std::string> params, std::shared_pt
 }
 
 #pragma endregion
+void InputHandler::labSpecial(std::vector<std::string> params, std::shared_ptr<Player> player) {
+	if (this->game->getTurn()->getType() != Turns::CHAR_ACTION) {
+		player->getClient()->write("Deze actie kan nog niet uitgevoerd worden, omdat het spel in een andere fase zit.\r\n");
+		return;
+	}
+	if (this->game->correctCharacterTurn(player, Characters::Condottiere)) {
+		if (params.size() > 1) {
+			int index = stoi(params[1]);
+			index = index - 1; // correct for + 1 visible to user
+			this->game->removeBuilding(player, index);
+		}
+		else {
+			player->getClient()->write("Incorrect gebruik. Voorbeeld: besteel 1\r\n");
+		}
+	}
+	else {
+		player->getClient()->write("U kunt dit commando niet uitvoeren met dit karakter\r\n");
+	}
+}
 
 void InputHandler::updatePreviousCommands(std::string input, std::shared_ptr<Player> player) {
 	if (!this->previousCommands->count(player)) {
@@ -565,6 +579,8 @@ std::shared_ptr<Game> InputHandler::getGame() {
 	return this->game;
 }
 
+
 InputHandler::~InputHandler()
 {
+	OutputDebugStringW(L"My output string.\r\n");
 }

@@ -2,6 +2,7 @@
 #include <algorithm>
 
 static Sync_queue<ClientCommand> queue;
+
 Server& Server::Instance() {
 	static Server instance;
 	return instance;
@@ -10,10 +11,11 @@ Server& Server::Instance() {
 Server::Server()
 {
 	this->socket_count = 0;
+	running = false;
 }
 
 void Server::run() {
-
+	running = true;
 	// start command consumer thread
 	thread consumer(&Server::consume_command, this);
 	consumer.detach(); // detaching is usually ugly, but in this case the right thing to do
@@ -22,26 +24,22 @@ void Server::run() {
 	ServerSocket server(Server::tcp_port);
 
 
-	while (true) {
+
+	while (running) {	
+
 		try {
 			std::cout << "Server awaiting players..." << std::endl;
 			Socket* client = nullptr;
-
-			while ((client = server.accept()) != nullptr) {
+			while ((client = server.accept()) != nullptr && running) {
+		
 				if (this->game->getPlayerCount() >= 2) {
 					client->write("Het spijt ons, maar het spel is al begonnen of heeft al genoeg spelers! \r\n");
 					client->write("Probeer het later nog eens! \r\n");
-
 					break;
 				}
 				//Create new socket
 				thread handler{ &Server::handle_client, this, client };
-				handler.detach();
-
-				//Add sockets to socket collection
-				//std::shared_ptr<Socket> shared_client_ptr(client);
-				//this->clients.push_back(shared_client_ptr);
-				//this->game->addPlayer(shared_client_ptr);
+				handler.detach();	
 
 				std::cout << "Server awaiting players... again..." << std::endl;
 
@@ -54,7 +52,14 @@ void Server::run() {
 			cerr << ex.what() << ", resuming..." << '\n';
 		}
 	}
+
 }
+
+void Server::stop() {
+	OutputDebugStringW(L"Stopping server...\r\n");
+	running = false;
+}
+
 
 void Server::setGame(std::shared_ptr<Game> game) {
 	this->game = game;
@@ -77,7 +82,7 @@ void Server::handle_client(Socket* socket)
 
 
 
-	while (true) { // game loop
+	while (running) { // game loop
 		try {
 			// read first line of request
 			string cmd = client->readline();
@@ -104,7 +109,6 @@ void Server::handle_client(Socket* socket)
 			client->write("ERROR: something went wrong during handling of your request. Sorry!\n");
 		}
 	}
-	std::cout << client.use_count() << std::endl;
 }
 
 void Server::broadcast(std::string msg) {
@@ -117,7 +121,7 @@ void Server::broadcast(std::string msg) {
 
 void Server::consume_command() // runs in its own thread
 {
-	while (true) {
+	while (running) {
 		ClientCommand command;
 		queue.get(command); // will block here unless there still are command objects in the queue
 		shared_ptr<Socket> client{ command.get_client() };

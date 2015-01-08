@@ -27,6 +27,13 @@ public:
 	void setDescription(std::string description);
 	std::string getDescription();
 
+	void giveSpecial();
+	bool hasSpecial();
+	bool didSpecial();
+	void doSpecial();
+
+	void reset();
+
 	std::string toString();
 
 	~BuildingCard();
@@ -36,5 +43,8 @@ private:
 	Colors color;
 	std::string description;
 	Buildings building;
+
+	bool specialCard;
+	bool specialExecuted;
 };
 

@@ -20,6 +20,8 @@ public:
 	static Server& Instance();
 
 	void run();
+	void stop();
+
 	void handle_client(Socket* socket);
 	void consume_command();
 	void broadcast(std::string msg);
@@ -41,6 +43,9 @@ private:
 	int socket_count;
 	const int tcp_port { 25565 };
 	const std::string prompt { "> " };
+
+
+	bool running;
 
 };
 

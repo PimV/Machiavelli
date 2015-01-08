@@ -145,6 +145,9 @@ std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> Loader::loadBuildingCards(s
 			i++;
 		}
 		std::shared_ptr<BuildingCard> card = std::make_shared<BuildingCard>(name, building, cost, color, description);
+		if (this->isSpecialBuildingCard(card)) {
+			card->giveSpecial();
+		}
 		deck->push(card);
 	}
 	return deck;
@@ -206,6 +209,11 @@ std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> Loader::loadCharacterCards
 		deck->push(card);
 	}
 	return deck;
+}
+
+bool Loader::isSpecialBuildingCard(std::shared_ptr<BuildingCard> card) {
+
+	return false;
 }
 
 
