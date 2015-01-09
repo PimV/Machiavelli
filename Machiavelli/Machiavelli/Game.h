@@ -58,6 +58,7 @@ public:
 	void swapCards(std::shared_ptr<Player> player, std::vector<int> indices);
 
 	void workshopSpecial(std::shared_ptr<Player> player);
+	void labSpecial(std::shared_ptr<Player> player, int index);
 
 
 	//Player handling

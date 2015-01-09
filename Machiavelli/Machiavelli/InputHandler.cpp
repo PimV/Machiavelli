@@ -479,22 +479,14 @@ void InputHandler::removeOptions(std::vector<std::string> params, std::shared_pt
 
 #pragma endregion
 void InputHandler::labSpecial(std::vector<std::string> params, std::shared_ptr<Player> player) {
-	if (this->game->getTurn()->getType() != Turns::CHAR_ACTION) {
-		player->getClient()->write("Deze actie kan nog niet uitgevoerd worden, omdat het spel in een andere fase zit.\r\n");
-		return;
-	}
-	if (this->game->correctCharacterTurn(player, Characters::Condottiere)) {
-		if (params.size() > 1) {
-			int index = stringToInt(params[1]);
-			this->game->removeBuilding(player, index);
-		}
-		else {
-			player->getClient()->write("Incorrect gebruik. Voorbeeld: besteel 1\r\n");
-		}
+	if (params.size() > 1) {
+		int index = stringToInt(params[1]);
+		this->game->labSpecial(player, index);
 	}
 	else {
-		player->getClient()->write("U kunt dit commando niet uitvoeren met dit karakter\r\n");
+		player->getClient()->write("Incorrect gebruik. Voorbeeld: laboratorium_special 1\r\n");
 	}
+
 }
 
 void InputHandler::updatePreviousCommands(std::string input, std::shared_ptr<Player> player) {

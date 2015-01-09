@@ -331,9 +331,47 @@ void Game::workshopSpecial(std::shared_ptr<Player> player) {
 	else {
 		player->getClient()->write("U heeft niet genoeg goud om deze speciale actie uit te voeren (minimaal 3 goud nodig).\r\n");
 	}
+}
 
+void Game::labSpecial(std::shared_ptr<Player> player, int index) {
+	if (this->turn->getType() != Turns::CHAR_ACTION) {
+		player->getClient()->write("Deze actie kan nog niet uitgevoerd worden, omdat het spel in een andere fase zit.\r\n");
+		return;
+	}
 
+	if (!this->correctPlayerTurn(player)) {
+		player->getClient()->write("U bent nog niet aan de beurt. Wacht totdat de andere speler zijn/haar beurt over is.\r\n");
+		return;
+	}
 
+	if (!this->correctBuildingTurn(player, Buildings::Laboratorium)) {
+		player->getClient()->write("U kunt de speciale actie van het Laboratorium niet gebruiken, omdat u dit gebouw niet heeft gebouwd.\r\n");
+		return;
+	}
+	std::shared_ptr<BuildingCard> building = player->getConstructedBuildingByBuilding(Buildings::Laboratorium);
+
+	if (building->didSpecial()) {
+		player->getClient()->write("U heeft deze speciale actie van het Laboratorium deze beurt al eens uitgevoerd.\r\n");
+		return;
+	}
+
+	if (player->getBuildingCards().size() > 0) {
+		if (index >= 0 && index < player->getBuildingCards().size()) {
+			Server::Instance().broadcast(player->getName() + " krijgt 1 goudstuk voor het afleggen van een bouwkaart.");
+			std::shared_ptr<BuildingCard> card = player->getBuildingCards().at(index);
+			player->getClient()->write("U heeft de volgende bouwkaart afgelegd: \r\n");
+			player->getClient()->write("\t" + card->toString());
+			player->changeGoldBy(1);
+			player->removeBuildingCard(card);
+			building->doSpecial();
+		}
+		else {
+			player->getClient()->write("Ongeldige index geselecteerd.\r\n");
+		}
+	}
+	else {
+		player->getClient()->write("U heeft niet genoeg bouwkaarten om deze actie uit te voeren.\r\n");
+	}
 }
 
 void Game::applyCardEffects(std::shared_ptr<Player> player) {
