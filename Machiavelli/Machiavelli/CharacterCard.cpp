@@ -1,5 +1,5 @@
 #include "CharacterCard.h"
-
+//#include <Windows.h>
 /**
 *	Create default card
 **/
@@ -21,7 +21,6 @@ CharacterCard::CharacterCard(std::string name, int id, Characters character) {
 	this->setCharacter(character);
 	this->setMurdered(false);
 	this->setPickpocketed(false);
-	std::cout << "new card pickpocket false" << std::endl;
 }
 
 /**
@@ -139,4 +138,6 @@ std::string CharacterCard::toString() {
 **/
 CharacterCard::~CharacterCard()
 {
+
+	//OutputDebugStringW(L"Verwijder karakterkaart\r\n"); // include <Windows.h> to test
 }

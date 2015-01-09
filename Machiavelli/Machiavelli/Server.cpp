@@ -112,8 +112,11 @@ void Server::handle_client(Socket* socket)
 void Server::broadcast(std::string msg) {
 	std::cout << "<Broadcast>: " << msg << std::endl;
 	for (std::vector<std::shared_ptr<Socket>>::size_type i = 0; i != clients.size(); i++) {
-		clients[i]->write(msg);
-		clients[i]->write("\r\n");
+		if (clients[i] != nullptr) {
+			clients[i]->write(msg);
+			clients[i]->write("\r\n");
+		}
+		
 	}
 }
 

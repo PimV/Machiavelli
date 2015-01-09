@@ -1,5 +1,5 @@
 #include "BuildingCard.h"
-
+//#include <Windows.h>
 /**
 *	Create default card
 **/
@@ -144,4 +144,5 @@ void BuildingCard::reset() {
 **/
 BuildingCard::~BuildingCard()
 {
+	//OutputDebugStringW(L"Verwijder bouwkaart\r\n"); // include <Windows.h> to test
 }

@@ -1,5 +1,4 @@
 #include <memory>
-#include <vld.h>
 #include "Server.h"
 #include "Game.h"
 #include "InputHandler.h"
@@ -38,15 +37,19 @@ int main(int argc, const char * argv[])
 	
 	Server::Instance().setInputHandler(inputHandler);
 	Server::Instance().setGame(game);
-	//Server::Instance().run();
+	Server::Instance().run();
 
 	std::string input;
+
 	while (input != "quit") {
 		std::cin >> input;
 	}
 
 
-
 	return 0;
+}
+
+void start() {
+
 }
 

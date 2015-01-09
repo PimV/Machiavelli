@@ -39,4 +39,5 @@ std::string BaseTurn::toString() { return "baseturn"; }
 
 BaseTurn::~BaseTurn()
 {
+	OutputDebugStringW(L"Deleting turn.\r\n");
 }
