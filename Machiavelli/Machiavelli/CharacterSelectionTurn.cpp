@@ -39,9 +39,9 @@ std::string CharacterSelectionTurn::printPossibleActions() {
 
 	if (!this->hasPickedCard()) {
 		actions.append("\t - pak <index> \r\n");
-	}
-
+	}	
 	actions.append("\t - bekijk_alle_karakterkaarten\r\n");
+	actions.append("\t - help\r\n");
 	return actions;
 }
 

@@ -22,6 +22,7 @@ InputHandler::InputHandler()
 	tiCmds.insert(std::pair<std::string, std::string>("bekijk_gebouwen", "bekijk_gebouwen"));
 	tiCmds.insert(std::pair<std::string, std::string>("bekijk_gebouwen_tegenstander", "bekijk_gebouwen_tegenstander"));
 	tiCmds.insert(std::pair<std::string, std::string>("bekijk_goud", "bekijk_goud"));
+	tiCmds.insert(std::pair<std::string, std::string>("aan_de_beurt", "aan_de_beurt"));
 
 	//Character selection commands
 	gameCmds.insert(std::pair<std::string, std::string>("pak", "pak <index>"));
@@ -63,53 +64,12 @@ InputHandler::InputHandler()
 	//Take gold command
 	gameCmds.insert(std::pair<std::string, std::string>("pak_goud", "pak_goud"));
 
-	//Turn over command
+	//Turn commands
 	gameCmds.insert(std::pair<std::string, std::string>("beurt_over", "beurt_over"));
+	gameCmds.insert(std::pair<std::string, std::string>("aan_de_beurt", "aan_de_beurt"));
 
 	//Help command	
 	gameCmds.insert(std::pair<std::string, std::string>("acties", "acties"));
-
-	////Character selection commands
-	//gameCommands.push_back("pak");
-	//gameCommands.push_back("dek");
-	//gameCommands.push_back("bekijk_alle_karakterkaarten");
-
-	////Building card commands
-	//gameCommands.push_back("pak_bouwkaarten");
-	//gameCommands.push_back("selecteer_bouwkaart");
-	//gameCommands.push_back("bouw_bouwkaart");
-
-	///* Moordenaar */
-	//gameCommands.push_back("vermoord");
-	//gameCommands.push_back("vermoord_opties");
-
-	///* Dief */
-	//gameCommands.push_back("besteel");
-	//gameCommands.push_back("besteel_opties");
-
-	///* Magiër */
-	//gameCommands.push_back("ruil_hand");
-	//gameCommands.push_back("ruil_kaarten");
-
-	///* Condottiere */
-	//gameCommands.push_back("verwijder_gebouw");
-	//gameCommands.push_back("verwijder_opties");
-
-	///* Player Stats */
-	//gameCommands.push_back("bekijk_karakterkaarten");
-	//gameCommands.push_back("bekijk_bouwkaarten");
-	//gameCommands.push_back("bekijk_gebouwen");
-	//gameCommands.push_back("bekijk_gebouwen_tegenstander");
-	//gameCommands.push_back("bekijk_goud");
-
-	////Take gold command
-	//gameCommands.push_back("pak_goud");
-
-	////Turn over command
-	//gameCommands.push_back("beurt_over");
-
-	////Help command	
-	//gameCommands.push_back("acties");
 }
 
 bool InputHandler::isGlobalCommand(std::string command) {
@@ -177,6 +137,9 @@ void InputHandler::handleGameCommand(std::vector<std::string> params, std::share
 		}
 		else if (params[0] == "bekijk_goud") {
 			this->checkGold(params, player);
+		}
+		else if (params[0] == "aan_de_beurt") {
+			this->game->printOnTurn(player);
 		}
 		return;
 	}
@@ -299,8 +262,7 @@ void InputHandler::finishTurn(std::vector<std::string> params, std::shared_ptr<P
 #pragma region Character Selection
 void InputHandler::coverCard(std::vector<std::string> params, std::shared_ptr<Player> player) {
 	if (params.size() > 1) {
-		int index = stoi(params[1]);
-		index = index - 1; // correct for + 1 visible to user
+		int index = stringToInt(params[1]);
 		this->game->coverCharacterCard(player, index);
 	}
 	else {
@@ -310,8 +272,7 @@ void InputHandler::coverCard(std::vector<std::string> params, std::shared_ptr<Pl
 
 void InputHandler::pickCard(std::vector<std::string> params, std::shared_ptr<Player> player) {
 	if (params.size() > 1) {
-		int index = stoi(params[1]);
-		index = index - 1; // correct for + 1 visible to user
+		int index = stringToInt(params[1]);
 		this->game->pickCharacterCard(player, index);
 	}
 	else {
@@ -328,8 +289,7 @@ void InputHandler::checkGold(std::vector<std::string> params, std::shared_ptr<Pl
 
 void InputHandler::selectBuildCard(std::vector<std::string> params, std::shared_ptr<Player> player) {
 	if (params.size() > 1) {
-		int index = stoi(params[1]);
-		index = index - 1; // correct for + 1 visible to user
+		int index = stringToInt(params[1]);
 		this->game->selectBuildingCard(player, index);
 	}
 	else {
@@ -343,8 +303,7 @@ void InputHandler::build(std::vector<std::string> params, std::shared_ptr<Player
 		return;
 	}
 	if (params.size() > 1) {
-		int index = stoi(params[1]);
-		index = index - 1; // correct for + 1 visible to user
+		int index = stringToInt(params[1]);
 		this->game->constructBuilding(player, index);
 	}
 	else {
@@ -362,8 +321,7 @@ void InputHandler::murder(std::vector<std::string> params, std::shared_ptr<Playe
 	}
 	if (this->game->correctCharacterTurn(player, Characters::Moordenaar)) {
 		if (params.size() > 1) {
-			int index = stoi(params[1]);
-			index = index - 1; // correct for + 1 visible to user
+			int index = stringToInt(params[1]);
 			this->game->murderCharacter(player, index);
 		}
 		else {
@@ -398,8 +356,7 @@ void InputHandler::pickpocket(std::vector<std::string> params, std::shared_ptr<P
 	}
 	if (this->game->correctCharacterTurn(player, Characters::Dief)) {
 		if (params.size() > 1) {
-			int index = stoi(params[1]);
-			index = index - 1; // correct for + 1 visible to user
+			int index = stringToInt(params[1]);
 			this->game->pickpocketCharacter(player, index);
 		}
 		else {
@@ -494,8 +451,7 @@ void InputHandler::remove(std::vector<std::string> params, std::shared_ptr<Playe
 	}
 	if (this->game->correctCharacterTurn(player, Characters::Condottiere)) {
 		if (params.size() > 1) {
-			int index = stoi(params[1]);
-			index = index - 1; // correct for + 1 visible to user
+			int index = stringToInt(params[1]);
 			this->game->removeBuilding(player, index);
 		}
 		else {
@@ -529,8 +485,7 @@ void InputHandler::labSpecial(std::vector<std::string> params, std::shared_ptr<P
 	}
 	if (this->game->correctCharacterTurn(player, Characters::Condottiere)) {
 		if (params.size() > 1) {
-			int index = stoi(params[1]);
-			index = index - 1; // correct for + 1 visible to user
+			int index = stringToInt(params[1]);
 			this->game->removeBuilding(player, index);
 		}
 		else {
@@ -569,6 +524,18 @@ std::vector<std::string> InputHandler::splitOnComma(std::string input) {
 	}
 
 	return output;
+}
+
+int InputHandler::stringToInt(std::string input) {
+	int retVal = -1;
+	try {
+		retVal = stoi(input);
+		retVal = retVal - 1;
+	}
+	catch (...) {
+
+	}
+	return retVal;
 }
 
 void InputHandler::setGame(std::shared_ptr<Game> game) {

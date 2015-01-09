@@ -59,6 +59,8 @@ public:
 	std::vector<std::string> splitOnComma(std::string input);
 	void updatePreviousCommands(std::string input, std::shared_ptr<Player>);
 
+	int stringToInt(std::string input);
+
 	virtual ~InputHandler();
 private:
 	std::shared_ptr<std::map<std::shared_ptr<Player>, std::shared_ptr<std::vector<std::string>>>> previousCommands;

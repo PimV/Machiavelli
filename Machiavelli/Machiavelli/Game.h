@@ -72,6 +72,8 @@ public:
 	std::shared_ptr<Deck<std::shared_ptr<CharacterCard>>> getCharacterDeck();
 	std::shared_ptr<Deck<std::shared_ptr<BuildingCard>>> getBuildingDeck();
 
+	void printOnTurn(std::shared_ptr<Player> player);
+
 	//Input handling
 
 	virtual ~Game();

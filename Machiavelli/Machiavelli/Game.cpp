@@ -59,22 +59,32 @@ void Game::startRound() {
 		return;
 	}
 
-	Server::Instance().broadcast("Ronde: " + std::to_string(rounds));
+	Server::Instance().broadcast("Ronde: " + std::to_string(rounds + 1));
 
 	//Load initial decks
 	this->characterDeck = loader->loadCharacterCards(std::make_shared<Deck<std::shared_ptr<CharacterCard>>>());
-
 	this->characterDeck->shuffle();
+	Server::Instance().broadcast("De karakterkaarten zijn geschud voor de nieuwe ronde.");
+
+	for (size_t i = 0; i < this->characterOrderDeck->size(); i++) {
+		this->characterOrderDeck->get(i)->setMurdered(false);
+		this->characterOrderDeck->get(i)->setPickpocketed(false);
+	}
 
 	std::shared_ptr<CharacterSelectionTurn> startingTurn = std::make_shared<CharacterSelectionTurn>();
 	this->turn = startingTurn;
 
 	//Check for King Card
 	if (this->player1->hasCharacterCardByCharacter(Characters::Koning)) {
+		Server::Instance().broadcast("Omdat " + player1->getName() + " de afgelopen ronde de Koning had, is hij deze ronde de koning.\r\n");
+		Server::Instance().broadcast(player1->getName() + " mag daarom beginnen.");
 		this->player1->setKing(true);
 		this->player2->setKing(false);
+
 	}
 	else if (this->player2->hasCharacterCardByCharacter(Characters::Koning)) {
+		Server::Instance().broadcast("Omdat " + player2->getName() + " de afgelopen ronde de Koning had, is hij deze ronde de koning.");
+		Server::Instance().broadcast(player2->getName() + " mag daarom beginnen.");
 		this->player1->setKing(false);
 		this->player2->setKing(true);
 	}
@@ -86,6 +96,8 @@ void Game::startRound() {
 	else if (this->player2->playerIsKing()) {
 		this->turn->setPlayer(player2);
 	}
+
+	Server::Instance().broadcast(this->turn->getPlayer()->getName() + " is aan de beurt.");
 
 	//Show player 1's pre-round options
 	if (rounds == 0) {
@@ -137,6 +149,9 @@ void Game::pickCharacterCard(std::shared_ptr<Player> player, int index) {
 		cTurn->pickCard();
 		if (this->checkTurnSwitch()) {
 			this->switchTurn();
+		}
+		else {
+			this->showCharacterDeckOptions(player);
 		}
 	}
 }
@@ -197,10 +212,23 @@ bool Game::validateCharacterCardInput(int index) {
 #pragma region Character Card Execution
 
 void Game::callCharacterCard() {
+	std::cout << "Current character order: " << currentCharacterCardIndex << std::endl;
 	for (size_t i = currentCharacterCardIndex; i < this->characterOrderDeck->size(); i++) {
+		currentCharacterCardIndex = i + 1;
 		std::shared_ptr<CharacterCard> card = this->characterOrderDeck->get(i);
+		Server::Instance().broadcast("De Koning roept het karakter \"" + card->getCharacterString() + "\" op.");
 		bool pickpocketed = card->isPickpocketed();
 		bool murdered = card->isMurdered();
+
+		if (murdered) {
+			if (player1->hasCharacterCardByCharacter(card->getCharacter()) || player2->hasCharacterCardByCharacter(card->getCharacter())) {
+				turns++;
+			}
+
+			std::cout << "Skipping turn cause " << card->getCharacterString() << " was murdered." << std::endl;
+			continue;
+		}
+
 		std::shared_ptr<Player> player = nullptr;
 		if (player1->hasCharacterChard(card)) {
 			card = player1->getCharacterCardByCharacter(card->getCharacter());
@@ -211,37 +239,39 @@ void Game::callCharacterCard() {
 			player = player2;
 		}
 
-		if (murdered) {
-			std::cout << "Skipping " << card->getCharacterString() << " cause murdered" << std::endl;
-			turns++;
-			currentCharacterCardIndex = i + 1;
-			continue;
-		}
-		
+
+
 
 		if (player1->hasCharacterChard(card)) {
 			if (pickpocketed) {
-				Server::Instance().broadcast(player2->getName() + " heeft de Dief achter een karakter van " + player1->getName() + " gestuurd.");
-				Server::Instance().broadcast(player2->getName() + " krijgt daarom al het goud van " + player1->getName() + "(" + std::to_string(player1->getGold()) + ")");
+				Server::Instance().broadcast("Omdat " + player2->getName() + " de Dief achter de " + card->getCharacterString() + " heeft gestuurd en " + player1->getName()
+					+ " dit karakter gekozen heeft, krijgt " + player2->getName() + " al het goud van " + player1->getName() + " (goudstukken: " + std::to_string(player1->getGold()));
+				//Server::Instance().broadcast(player2->getName() + " heeft de Dief achter een karakter van " + player1->getName() + " gestuurd.");
+				//Server::Instance().broadcast(player2->getName() + " krijgt daarom al het goud van " + player1->getName() + "(" + std::to_string(player1->getGold()) + ")");
 				player2->changeGoldBy(player1->getGold());
 				player1->changeGoldBy(-player1->getGold());
 			}
 			this->turn->setPlayer(player1);
 			player1->setActiveCharacterCard(card);
-
+			//i = currentCharacterCardIndex;
 			currentCharacterCardIndex = i + 1;
+
 			break;
 		}
 		else if (player2->hasCharacterChard(card)) {
 			if (pickpocketed) {
-				Server::Instance().broadcast(player1->getName() + " heeft de Dief achter een karakter van " + player2->getName() + " gestuurd.");
-				Server::Instance().broadcast(player1->getName() + " krijgt daarom al het goud van " + player2->getName() + "(" + std::to_string(player2->getGold()) + ")");
+				Server::Instance().broadcast("Omdat " + player1->getName() + " de Dief achter de " + card->getCharacterString() + " heeft gestuurd en " + player2->getName()
+					+ " dit karakter gekozen heeft, krijgt " + player1->getName() + " al het goud van " + player2->getName() + " (goudstukken: " + std::to_string(player2->getGold()));
+				//Server::Instance().broadcast(player1->getName() + " heeft de Dief achter een karakter van " + player2->getName() + " gestuurd.");
+				//Server::Instance().broadcast(player1->getName() + " krijgt daarom al het goud van " + player2->getName() + "(" + std::to_string(player2->getGold()) + ")");
 				player1->changeGoldBy(player2->getGold());
 				player2->changeGoldBy(-player2->getGold());
 			}
 			this->turn->setPlayer(player2);
 			player2->setActiveCharacterCard(card);
+			//i = currentCharacterCardIndex;
 			currentCharacterCardIndex = i + 1;
+
 			break;
 		}
 	}
@@ -284,7 +314,8 @@ void Game::workshopSpecial(std::shared_ptr<Player> player) {
 	}
 
 	if (player->getGold() >= 3) {
-		player->getClient()->write("U betaalt 3 goudstukken voor de volgende 2 bouwkaarten: \r\n");
+		Server::Instance().broadcast(player->getName() + " betaalt 3 goudstukken om twee nieuwe gebouwkaarten te pakken.");
+		player->getClient()->write("U heeft de volgende 2 bouwkaarten gepakt: \r\n");
 
 		std::shared_ptr<BuildingCard> newCard = this->buildingDeck->pop();
 		player->getClient()->write("\t " + newCard->toString() + "\r\n");
@@ -294,11 +325,11 @@ void Game::workshopSpecial(std::shared_ptr<Player> player) {
 		player->getClient()->write("\t " + newCard->toString() + "\r\n");
 		player->addBuildingCard(newCard);
 		player->changeGoldBy(-3);
-		
+
 		building->doSpecial();
 	}
 	else {
-		player->getClient()->write("U heeft niet genoeg goud om dze speciale actie uit te voeren (minimaal 3 goud nodig).\r\n");
+		player->getClient()->write("U heeft niet genoeg goud om deze speciale actie uit te voeren (minimaal 3 goud nodig).\r\n");
 	}
 
 
@@ -576,7 +607,7 @@ void Game::pickpocketCharacter(std::shared_ptr<Player> player, int index) {
 			return;
 		}
 		if (card->getCharacter() == Characters::Moordenaar) {
-			player->getClient()->write("U kunt niet stelen van de Moordenaar!");
+			player->getClient()->write("U kunt niet stelen van de Moordenaar!\r\n");
 			return;
 		}
 
@@ -762,7 +793,7 @@ void Game::showCharacterDeckOptions(std::shared_ptr<Player> player) {
 
 	player->getClient()->write("Mogelijke opties uit de karakterstapel: \r\n");
 	for (size_t i = 0; i < this->characterDeck->size(); i++) {
-		player->getClient()->write("[" + std::to_string(i + 1) + "] " + this->characterDeck->get(i)->getCharacterString() + "\r\n");
+		player->getClient()->write("[" + std::to_string(i + 1) + "] " + this->characterDeck->get(i)->getCharacterString() + " (Roepkaart: " + std::to_string(this->characterDeck->get(i)->getId()) + ")\r\n");
 	}
 }
 
@@ -777,10 +808,11 @@ void Game::switchTurn() {
 	if (this->turn->isOver()) {
 		turns++;
 		if (this->turn->getPlayer() == player1) {
+			Server::Instance().broadcast(player2->getName() + " is nu aan de beurt.");
 			this->turn->setPlayer(player2);
-			std::cout << "Turn to player2" << std::endl;
 		}
 		else if (this->turn->getPlayer() == player2) {
+			Server::Instance().broadcast(player1->getName() + " is nu aan de beurt.");
 			this->turn->setPlayer(player1);
 			std::cout << "Turn to player1" << std::endl;
 		}
@@ -834,6 +866,11 @@ void Game::prepareTurn() {
 		this->callCharacterCard();
 	}
 }
+
+void Game::printOnTurn(std::shared_ptr<Player> player) {
+	player->getClient()->write(this->turn->getPlayer()->getName() + " is aan de beurt.\r\n");
+}
+
 
 std::shared_ptr<BaseTurn> Game::getTurn() {
 	return this->turn;

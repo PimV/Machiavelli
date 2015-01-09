@@ -87,7 +87,11 @@ std::string CharacterActionTurn::printPossibleActions() {
 	actions.append("\t - pak_goud \r\n");
 	actions.append("\t - pak_bouwkaarten \r\n");
 	actions.append("\t - bouw_bouwkaart <index> \r\n");
+	actions.append("\t - bekijk_bouwkaarten \r\n");
+	actions.append("\t - bekijk_gebouwen_tegenstander \r\n");
+	actions.append("\t - bekijk_goud \r\n");
 	actions.append("\t - help \r\n");
+	actions.append("\t - acties \r\n");
 
 	actions.append(this->getPlayer()->getActiveCharacterCard()->possibleActions());
 	actions.append(this->getPlayer()->getBuildingActions());
