@@ -1,5 +1,5 @@
 #include <memory>
-//#include <vld.h>
+#include <vld.h>
 #include "Server.h"
 #include "Game.h"
 #include "InputHandler.h"
@@ -10,8 +10,6 @@ void WINAPI ConsoleHandler(DWORD CEvent)
 {
 	if (CEvent == CTRL_CLOSE_EVENT)
 	{
-		//OutputDebugStringW(L"Stop!\r\n");
-
 		std::cout << "No memory leaks detected.\r\n" << std::endl;
 		std::cout << "Visual Leak Detector is now exiting.\r\n" << std::endl;
 		

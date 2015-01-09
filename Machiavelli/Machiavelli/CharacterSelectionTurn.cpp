@@ -32,7 +32,17 @@ bool CharacterSelectionTurn::isOver() {
 }
 
 std::string CharacterSelectionTurn::printPossibleActions() {
-	return "std::string";
+	std::string actions = "Mogelijke acties voor deze beurt: \r\n";
+	if (!this->hasCoveredCard()) {
+		actions.append("\t - dek <index> \r\n");
+	}
+
+	if (!this->hasPickedCard()) {
+		actions.append("\t - pak <index> \r\n");
+	}
+
+	actions.append("\t - bekijk_alle_karakterkaarten\r\n");
+	return actions;
 }
 
 void CharacterSelectionTurn::resetTurn() {

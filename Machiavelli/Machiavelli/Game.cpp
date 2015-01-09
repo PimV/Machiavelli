@@ -211,16 +211,15 @@ void Game::callCharacterCard() {
 			player = player2;
 		}
 
+		if (murdered) {
+			std::cout << "Skipping " << card->getCharacterString() << " cause murdered" << std::endl;
+			turns++;
+			currentCharacterCardIndex = i + 1;
+			continue;
+		}
 		
 
 		if (player1->hasCharacterChard(card)) {
-			if (murdered) {
-				std::cout << "Skipping " << card->getCharacterString() << " cause murdered" << std::endl;
-				turns++;
-				currentCharacterCardIndex = i + 1;
-				continue;
-			}
-
 			if (pickpocketed) {
 				Server::Instance().broadcast(player2->getName() + " heeft de Dief achter een karakter van " + player1->getName() + " gestuurd.");
 				Server::Instance().broadcast(player2->getName() + " krijgt daarom al het goud van " + player1->getName() + "(" + std::to_string(player1->getGold()) + ")");
@@ -234,13 +233,6 @@ void Game::callCharacterCard() {
 			break;
 		}
 		else if (player2->hasCharacterChard(card)) {
-			
-			if (murdered) {
-				std::cout << "Skipping " << card->getCharacterString() << " cause murdered" << std::endl;
-				turns++;
-				currentCharacterCardIndex = i + 1;
-				continue;
-			}
 			if (pickpocketed) {
 				Server::Instance().broadcast(player1->getName() + " heeft de Dief achter een karakter van " + player2->getName() + " gestuurd.");
 				Server::Instance().broadcast(player1->getName() + " krijgt daarom al het goud van " + player2->getName() + "(" + std::to_string(player2->getGold()) + ")");
@@ -583,6 +575,10 @@ void Game::pickpocketCharacter(std::shared_ptr<Player> player, int index) {
 			player->getClient()->write("U kunt niet uw eigen karakter bestelen!\r\n");
 			return;
 		}
+		if (card->getCharacter() == Characters::Moordenaar) {
+			player->getClient()->write("U kunt niet stelen van de Moordenaar!");
+			return;
+		}
 
 		if (card->isMurdered()) {
 			player->getClient()->write("U kunt niet van een vermoord karakter stelen!\r\n");
@@ -590,7 +586,9 @@ void Game::pickpocketCharacter(std::shared_ptr<Player> player, int index) {
 		}
 
 		card->setPickpocketed(true);
-		player->getClient()->write("U heeft de Dief achter de " + card->getCharacterString() + " gestuurd.\r\n");
+		Server::Instance().broadcast(player->getName() + " heeft de Dief achter de " + card->getCharacterString() + " gestuurd.\r\n");
+		//player->getClient()->write("U heeft de Dief achter de " + card->getCharacterString() + " gestuurd.\r\n");
+
 		caTurn->doSpecial();
 	}
 	else {

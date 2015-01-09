@@ -19,16 +19,7 @@ void Server::run() {
 	// start command consumer thread
 	thread consumer(&Server::consume_command, this);
 	consumer.detach(); // detaching is usually ugly, but in this case the right thing to do
-
-	//// create a server socket
-	
 	this->wait();
-
-	//std::thread acceptClients(&Server::wait, this);
-	//acceptClients.detach();
-
-	
-
 }
 
 void Server::wait() {

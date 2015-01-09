@@ -433,6 +433,10 @@ std::string Player::getBuildingActions() {
 }
 
 void Player::applyKingEffect() {
+	if (this->hasConstructedBuildingByBuilding(Buildings::Magier_School)) {
+		this->gold++;
+	}
+
 	for (size_t i = 0; i < this->buildings.size(); i++) {
 		if (this->buildings.at(i)->getColor() == Colors::Geel) {
 			this->gold++;
@@ -441,6 +445,10 @@ void Player::applyKingEffect() {
 }
 
 void Player::applyBishopEffect() {
+	if (this->hasConstructedBuildingByBuilding(Buildings::Magier_School)) {
+		this->gold++;
+	}
+
 	for (size_t i = 0; i < this->buildings.size(); i++) {
 		if (this->buildings.at(i)->getColor() == Colors::Blauw) {
 			this->gold++;
@@ -450,6 +458,11 @@ void Player::applyBishopEffect() {
 
 void Player::applyMerchantEffect() {
 	this->gold++;
+
+	if (this->hasConstructedBuildingByBuilding(Buildings::Magier_School)) {
+		this->gold++;
+	}
+
 	for (size_t i = 0; i < this->buildings.size(); i++) {
 		if (this->buildings.at(i)->getColor() == Colors::Groen) {
 			this->gold++;
@@ -458,6 +471,10 @@ void Player::applyMerchantEffect() {
 }
 
 void Player::applyWarlordEffect() {
+	if (this->hasConstructedBuildingByBuilding(Buildings::Magier_School)) {
+		this->gold++;
+	}
+
 	for (size_t i = 0; i < this->buildings.size(); i++) {
 		if (this->buildings.at(i)->getColor() == Colors::Rood) {
 			this->gold++;
