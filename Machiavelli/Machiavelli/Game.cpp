@@ -360,7 +360,7 @@ void Game::labSpecial(std::shared_ptr<Player> player, int index) {
 			Server::Instance().broadcast(player->getName() + " krijgt 1 goudstuk voor het afleggen van een bouwkaart.");
 			std::shared_ptr<BuildingCard> card = player->getBuildingCards().at(index);
 			player->getClient()->write("U heeft de volgende bouwkaart afgelegd: \r\n");
-			player->getClient()->write("\t" + card->toString());
+			player->getClient()->write("\t" + card->toString() + "\r\n");
 			player->changeGoldBy(1);
 			player->removeBuildingCard(card);
 			building->doSpecial();

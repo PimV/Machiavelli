@@ -55,7 +55,6 @@ void Server::wait() {
 void Server::stop() {
 	OutputDebugStringW(L"Stopping server...\r\n");
 	running = false;
-	OutputDebugStringW(L"Stopping server...\r\n");
 }
 
 
@@ -110,14 +109,21 @@ void Server::handle_client(Socket* socket)
 }
 
 void Server::broadcast(std::string msg) {
-	std::cout << "<Broadcast>: " << msg << std::endl;
-	for (std::vector<std::shared_ptr<Socket>>::size_type i = 0; i != clients.size(); i++) {
-		if (clients[i] != nullptr) {
-			clients[i]->write(msg);
-			clients[i]->write("\r\n");
+	try {
+		std::cout << "<Broadcast>: " << msg << std::endl;
+		for (std::vector<std::shared_ptr<Socket>>::size_type i = 0; i != clients.size(); i++) {
+			if (clients[i] != nullptr) {
+				clients[i]->write(msg);
+				clients[i]->write("\r\n");
+			}
+
 		}
-		
 	}
+	catch (const exception& ex) {
+		std::cout << "Could not broadcast message: " << msg << std::endl;
+	}
+
+	
 }
 
 void Server::consume_command() // runs in its own thread

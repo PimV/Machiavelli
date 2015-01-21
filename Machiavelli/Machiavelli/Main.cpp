@@ -20,16 +20,6 @@ void WINAPI ConsoleHandler(DWORD CEvent)
 
 int main(int argc, const char * argv[])
 {
-	//Fix all memory leaks
-	//std::cout << "Visual Leak Detector Version 2.4RC2-PIMV installed.\r\n" << std::endl;
-	//OutputDebugStringW(L"Visual Leak Detector Version 2.4RC2-PIMV installed.\r\n");
-
-	//if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleHandler, TRUE) == FALSE)
-	//{
-	//	
-	//}
-
-
 	std::shared_ptr<Game> game = std::make_shared<Game>();
 	std::shared_ptr<InputHandler> inputHandler = std::make_shared<InputHandler>();
 	

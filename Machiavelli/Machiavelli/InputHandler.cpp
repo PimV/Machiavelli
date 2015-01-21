@@ -96,19 +96,25 @@ bool InputHandler::isTurnIndependentCommand(std::string command) {
 
 bool InputHandler::handleInput(std::string input, std::shared_ptr<Player> player) {
 	if (input.length() > 0) {
+		try {
+			std::vector<std::string> params = this->splitOnSpace(input);
 
-		std::vector<std::string> params = this->splitOnSpace(input);
+			//Separate function for game commands
+			if (isGameCommand(params[0])) {
+				this->handleGameCommand(params, player);
+				return true;
+			}
+			else {
+				this->handleGlobalCommand(params, player);
+			}
 
-		//Separate function for game commands
-		if (isGameCommand(params[0])) {
-			this->handleGameCommand(params, player);
-			return true;
+			this->updatePreviousCommands(input, player);
 		}
-		else {
-			this->handleGlobalCommand(params, player);
+		catch (const exception& ex) {
+			player->getClient()->write("Uw input kon niet verwerkt worden.\r\n");
+			std::cout << "Could not process input from Client [:" << player->getName() << std::endl;
 		}
 
-		this->updatePreviousCommands(input, player);
 	}
 	return true;
 }
