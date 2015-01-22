@@ -11,7 +11,10 @@ Player::Player()
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("PLACEHOLDER_BUILDING", Buildings::Kerk, 1, Colors::Rood, "PLACEHOLDER_BUILDING"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("PLACEHOLDER_BUILDING", Buildings::Kerk, 1, Colors::Rood, "PLACEHOLDER_BUILDING"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("PLACEHOLDER_BUILDING", Buildings::Kerk, 1, Colors::Rood, "PLACEHOLDER_BUILDING"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("PLACEHOLDER_BUILDING", Buildings::Kerk, 1, Colors::Rood, "PLACEHOLDER_BUILDING"));
 	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
 	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
 
