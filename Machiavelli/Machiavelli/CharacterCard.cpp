@@ -55,7 +55,7 @@ Characters CharacterCard::getCharacter() {
 *	Get card character string
 **/
 std::string CharacterCard::getCharacterString() {
-	return character_strings[(int)this->character];
+	return character_strings[static_cast<int>(this->character)];
 }
 
 /**

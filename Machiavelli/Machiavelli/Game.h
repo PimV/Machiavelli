@@ -26,7 +26,7 @@ public:
 	//Turn handling
 	bool checkTurnSwitch();
 	void switchTurn();
-	void switchTurnTypes();
+	bool switchTurnTypes();
 	void prepareTurn();
 	void applyCardEffects(std::shared_ptr<Player> player);
 	bool correctPlayerTurn(std::shared_ptr<Player> player);

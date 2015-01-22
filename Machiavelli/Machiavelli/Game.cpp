@@ -228,10 +228,12 @@ void Game::callCharacterCard() {
 
 		if (murdered) {
 			if (player1->hasCharacterCardByCharacter(card->getCharacter()) || player2->hasCharacterCardByCharacter(card->getCharacter())) {
-				turns++;
+				//turns++;
+				this->turn->setOver(true);
 			}
+			//currentCharacterCardIndex = i + 2;
 
-			std::cout << "Skipping turn cause " << card->getCharacterString() << " was murdered." << std::endl;
+			std::cout << "Skipping turn cause " << card->getCharacterString() << " was murdered. char index:" << currentCharacterCardIndex << std::endl;
 			continue;
 		}
 
@@ -279,10 +281,20 @@ void Game::callCharacterCard() {
 			break;
 		}
 	}
-	Server::Instance().broadcast(this->turn->getPlayer()->getName() + " is aan de beurt met de " + this->turn->getPlayer()->getActiveCharacterCard()->getCharacterString());
 
-	this->applyCardEffects(this->turn->getPlayer());
-	this->turn->getPlayer()->getClient()->write(this->turn->printPossibleActions());
+	if (this->turn->isOver()) {
+		switchTurn();
+	}
+	else {
+		Server::Instance().broadcast(this->turn->getPlayer()->getName() + " is aan de beurt met de " + this->turn->getPlayer()->getActiveCharacterCard()->getCharacterString());
+
+		this->applyCardEffects(this->turn->getPlayer());
+		this->turn->getPlayer()->getClient()->write(this->turn->printPossibleActions());
+	}
+
+	
+
+
 	//this->turn->getPlayer()->getClient()->write(this->turn->getPlayer()->getActiveCharacterCard()->possibleActions());
 }
 
@@ -857,14 +869,14 @@ void Game::switchTurn() {
 			if (this->turn->getType() == Turns::CHAR_SELECT) {
 				Server::Instance().broadcast(player2->getName() + " is nu aan de beurt.");
 			}
-	
+
 			this->turn->setPlayer(player2);
 		}
 		else if (this->turn->getPlayer() == player2) {
 			if (this->turn->getType() == Turns::CHAR_SELECT) {
 				Server::Instance().broadcast(player1->getName() + " is nu aan de beurt.");
 			}
-			
+
 			this->turn->setPlayer(player1);
 			std::cout << "Turn to player1" << std::endl;
 		}
@@ -887,21 +899,23 @@ void Game::switchTurn() {
 	}
 }
 
-void Game::switchTurnTypes() {
+bool Game::switchTurnTypes() {
 	if (turns % 4 == 0) {
 		if (this->turn->getType() == Turns::CHAR_SELECT) {
 			//Switch to character action turn
 			this->turn = std::make_shared<CharacterActionTurn>();
 			std::cout << "turn type switch to action" << std::endl;
+			return true;
 		}
 		else if (this->turn->getType() == Turns::CHAR_ACTION) {
 			std::cout << "switching turns plzzz" << std::endl;
 			this->startRound();
 			player1->resetForNextRound();
 			player2->resetForNextRound();
+			return true;
 		}
-
 	}
+	return false;
 }
 
 void Game::prepareTurn() {
@@ -915,7 +929,7 @@ void Game::prepareTurn() {
 			std::cout << "Asking player what to do with this character" << std::endl;
 			this->callCharacterCard();
 		}
-		
+
 
 
 	}

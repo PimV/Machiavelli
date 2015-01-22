@@ -11,17 +11,17 @@ Player::Player()
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
-	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
-	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
 
-	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
-	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
-	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
 
-	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	//this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
 
-	this->gold = 100;
+	this->gold = 0;
 
 	this->client = nullptr;
 
@@ -36,7 +36,7 @@ Player::Player(std::string name, int age) {
 	this->choosableBuildingCards = std::vector<std::shared_ptr<BuildingCard>>();
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
-	this->gold = 100;
+	this->gold = 0;
 
 }
 
