@@ -19,6 +19,7 @@ public:
 	void startGame();
 	void endGame();
 	void startRound();
+	bool isOver();
 	std::shared_ptr<CharacterCard> getCurrentCalledCharacter();
 	bool isStarted();
 
@@ -93,6 +94,7 @@ private:
 
 	bool started;
 	bool lastRound;
+	bool lastTurn;
 	bool gameOver;
 
 	int turns;

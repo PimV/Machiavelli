@@ -12,6 +12,14 @@ Player::Player()
 	this->buildings = std::vector<std::shared_ptr<BuildingCard>>();
 
 	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+
+	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
+
+	this->buildings.push_back(std::make_shared<BuildingCard>("lab", Buildings::Laboratorium, 5, Colors::Rood, "lab"));
 
 	this->gold = 100;
 

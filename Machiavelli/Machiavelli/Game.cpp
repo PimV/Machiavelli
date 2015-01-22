@@ -12,6 +12,7 @@ Game::Game()
 
 	this->started = false;
 	this->lastRound = false;
+	this->lastTurn = false;
 	this->gameOver = false;
 }
 
@@ -26,6 +27,7 @@ void Game::startGame() {
 	//Officially start game (input flag)
 	this->gameOver = false;
 	this->lastRound = false;
+	this->lastTurn = false;
 	this->startRound();
 	this->started = true;
 
@@ -51,6 +53,10 @@ void Game::endGame() {
 	}
 	Server::Instance().broadcast("Het spel is nu voorbij. Bedankt voor het spelen!");
 	this->gameOver = true;
+}
+
+bool Game::isOver() {
+	return this->gameOver;
 }
 
 void Game::startRound() {
@@ -97,7 +103,7 @@ void Game::startRound() {
 		this->turn->setPlayer(player2);
 	}
 
-	Server::Instance().broadcast(this->turn->getPlayer()->getName() + " is aan de beurt.");
+	//Server::Instance().broadcast(this->turn->getPlayer()->getName() + " is aan de beurt.");
 
 	//Show player 1's pre-round options
 	if (rounds == 0) {
@@ -262,8 +268,6 @@ void Game::callCharacterCard() {
 			if (pickpocketed) {
 				Server::Instance().broadcast("Omdat " + player1->getName() + " de Dief achter de " + card->getCharacterString() + " heeft gestuurd en " + player2->getName()
 					+ " dit karakter gekozen heeft, krijgt " + player1->getName() + " al het goud van " + player2->getName() + " (goudstukken: " + std::to_string(player2->getGold()));
-				//Server::Instance().broadcast(player1->getName() + " heeft de Dief achter een karakter van " + player2->getName() + " gestuurd.");
-				//Server::Instance().broadcast(player1->getName() + " krijgt daarom al het goud van " + player2->getName() + "(" + std::to_string(player2->getGold()) + ")");
 				player1->changeGoldBy(player2->getGold());
 				player2->changeGoldBy(-player2->getGold());
 			}
@@ -843,14 +847,24 @@ bool Game::checkTurnSwitch() {
 }
 
 void Game::switchTurn() {
+	if (currentCharacterCardIndex == 7 && lastRound) {
+		this->lastTurn = true;
+	}
+
 	if (this->turn->isOver()) {
 		turns++;
 		if (this->turn->getPlayer() == player1) {
-			Server::Instance().broadcast(player2->getName() + " is nu aan de beurt.");
+			if (this->turn->getType() == Turns::CHAR_SELECT) {
+				Server::Instance().broadcast(player2->getName() + " is nu aan de beurt.");
+			}
+	
 			this->turn->setPlayer(player2);
 		}
 		else if (this->turn->getPlayer() == player2) {
-			Server::Instance().broadcast(player1->getName() + " is nu aan de beurt.");
+			if (this->turn->getType() == Turns::CHAR_SELECT) {
+				Server::Instance().broadcast(player1->getName() + " is nu aan de beurt.");
+			}
+			
 			this->turn->setPlayer(player1);
 			std::cout << "Turn to player1" << std::endl;
 		}
@@ -861,10 +875,6 @@ void Game::switchTurn() {
 
 		//Switch turn types
 		this->switchTurnTypes();
-
-		if (this->lastRound) {
-			return;
-		}
 
 		//Reset current turn;
 		this->turn->resetTurn();
@@ -885,6 +895,7 @@ void Game::switchTurnTypes() {
 			std::cout << "turn type switch to action" << std::endl;
 		}
 		else if (this->turn->getType() == Turns::CHAR_ACTION) {
+			std::cout << "switching turns plzzz" << std::endl;
 			this->startRound();
 			player1->resetForNextRound();
 			player2->resetForNextRound();
@@ -900,8 +911,13 @@ void Game::prepareTurn() {
 		this->showCharacterDeckOptions(this->turn->getPlayer());
 	}
 	else if (this->turn->getType() == Turns::CHAR_ACTION) {
-		std::cout << "Asking player what to do with this character" << std::endl;
-		this->callCharacterCard();
+		if (!gameOver){
+			std::cout << "Asking player what to do with this character" << std::endl;
+			this->callCharacterCard();
+		}
+		
+
+
 	}
 }
 

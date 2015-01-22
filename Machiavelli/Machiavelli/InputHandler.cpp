@@ -95,6 +95,11 @@ bool InputHandler::isTurnIndependentCommand(std::string command) {
 }
 
 bool InputHandler::handleInput(std::string input, std::shared_ptr<Player> player) {
+	if (game->isOver()) {
+		player->getClient()->write("Het spel is afgelopen. Gelieve te wachten totdat de host het spel herstart.\r\n");
+		return false;
+	}
+	
 	if (input.length() > 0) {
 		try {
 			std::vector<std::string> params = this->splitOnSpace(input);
