@@ -228,7 +228,7 @@ void Game::callCharacterCard() {
 
 		if (murdered) {
 			if (player1->hasCharacterCardByCharacter(card->getCharacter()) || player2->hasCharacterCardByCharacter(card->getCharacter())) {
-				//turns++;
+				turns++;
 				this->turn->setOver(true);
 			}
 			//currentCharacterCardIndex = i + 2;
@@ -483,7 +483,7 @@ void Game::takeCards(std::shared_ptr<Player> player) {
 
 	}
 	else {
-		player->getClient()->write("Pak één van de twee kaarten (de andere wordt gedekt op tafel gelegd) via \"selecteer_bouwkaart <index>\": \r\n");
+		player->getClient()->write("Pak Ã©Ã©n van de twee kaarten (de andere wordt gedekt op tafel gelegd) via \"selecteer_bouwkaart <index>\": \r\n");
 		player->getClient()->write(player->printChoosableBuildingCards());
 	}
 
@@ -921,7 +921,7 @@ bool Game::switchTurnTypes() {
 void Game::prepareTurn() {
 	if (this->turn->getType() == Turns::CHAR_SELECT) {
 		std::cout << "Showing character deck options to player" << std::endl;
-		//this->turn->getPlayer()->getClient()->write("U bent aan de beurt en moet nu één kaart bedekken (dek <kaart_index>) en één kaart pakken (pak <kaart_index>).\r\n");
+		//this->turn->getPlayer()->getClient()->write("U bent aan de beurt en moet nu Ã©Ã©n kaart bedekken (dek <kaart_index>) en Ã©Ã©n kaart pakken (pak <kaart_index>).\r\n");
 		this->showCharacterDeckOptions(this->turn->getPlayer());
 	}
 	else if (this->turn->getType() == Turns::CHAR_ACTION) {
